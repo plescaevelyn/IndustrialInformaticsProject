@@ -23,7 +23,7 @@ The technologies we will be using in the project are:
     <td>
       <img src="contributors/ale.jpeg" width="100px;" alt="Alexandra"/><br />
       <sub><b>Alexandra Taslauan</b></sub></a><br />
-      <a href="https://github.com/#" title="">💻</a>
+      <a href="https://github.com/aletaslauan" title="">💻</a>
     </td>
     <td>
       <img src="contributors/diana.jpeg" width="100px;" alt="Diana"/><br />
