@@ -6,7 +6,7 @@ We will create an ASP.NET Web Application that uses databases.
 
 ## Technologies used
 The technologies we will be using in the project are:
-- .NET
+- C#
 - ASP.NET
 - MySQL
 - UML diagrams
