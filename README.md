@@ -33,7 +33,7 @@ The technologies we will be using in the project are:
     <td>
      <img src="contributors/ada.jpeg" width="100px;" alt="Ada"/><br />
       <sub><b>Ada Tudor</b></sub></a><br />
-      <a href="https://github.com/DaNoobRo" title="">🎨💻</a>
+      <a href="https://github.com/DaNoobRo" title="">🎨</a>
     </td>
 </table>
 
