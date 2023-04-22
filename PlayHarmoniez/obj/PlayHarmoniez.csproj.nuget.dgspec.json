@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Facultate\\PlayHarmoniez\\PlayHarmoniez\\PlayHarmoniez.csproj": {}
+    "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj": {}
   },
   "projects": {
-    "F:\\Facultate\\PlayHarmoniez\\PlayHarmoniez\\PlayHarmoniez.csproj": {
+    "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Facultate\\PlayHarmoniez\\PlayHarmoniez\\PlayHarmoniez.csproj",
+        "projectUniqueName": "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj",
         "projectName": "PlayHarmoniez",
-        "projectPath": "F:\\Facultate\\PlayHarmoniez\\PlayHarmoniez\\PlayHarmoniez.csproj",
+        "projectPath": "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj",
         "packagesPath": "C:\\Users\\evely\\.nuget\\packages\\",
-        "outputPath": "F:\\Facultate\\PlayHarmoniez\\PlayHarmoniez\\obj\\",
+        "outputPath": "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\evely\\AppData\\Roaming\\NuGet\\NuGet.Config",
