@@ -1,8 +1,12 @@
-# IndustrialInformaticsProject
+# PlayHarmoniz
 
 ## Description of the project
 This is a project created for the Industrial Informatics subject at TUC-N.
 We will create an ASP.NET Web Application that uses databases.
+
+The purpose of our application is creating a music streaming service.
+
+The application contains simple users (with login, signup and signout activities) that can access the available music, like songs or add playlists and administrators that can perform CRUD operations on the available data.
 
 ## Technologies used
 The technologies we will be using in the project are:
