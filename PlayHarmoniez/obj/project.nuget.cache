@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "/QD2DphUYe5qqH4uPYyUwLDs4piibOXKpUuL7LTjkeNTS4iON3PCCuGRcUkg6v08AS41XRel6VY8654rYj3Akg==",
+  "success": true,
+  "projectFilePath": "F:\\Facultate\\PlayHarmoniez\\PlayHarmoniez\\PlayHarmoniez.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\evely\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.17.2\\microsoft.visualstudio.azure.containers.tools.targets.1.17.2.nupkg.sha512"
+  ],
+  "logs": []
+}
