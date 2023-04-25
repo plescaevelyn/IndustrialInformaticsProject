@@ -10,8 +10,10 @@ namespace PlayHarmoniez.Models
         public DateTime PublishData { get; set; }
         public string Description { get; set; }
         public int AlbumId { get; set; }
-        // public Albums Album { get; set; }
+        public Album Album { get; set; }
         public string SoundFile { get; set; }
         public string ImageFile { get; set; }
+        public List<PlaylistSong> PlaylistSongs { get; set; }
+        public List<LikedSong> LikedSong { get; set; }
     }
 }
