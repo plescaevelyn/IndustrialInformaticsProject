@@ -1,0 +1,25 @@
+﻿@model Album
+
+<h1> Add Album </h1>
+<form method="post" action="Add" class="mt-5">
+	<div class = "mb-3">
+		<label for="" class="form-label">Name</label>
+		<input type="text" class="form-control" asp-for="@Model.AlbumName"/>
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Author</label>
+		<input type="text" class="form-control" asp-for="@Model.AlbumAuthor" />
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Release date</label>
+		<input type="text" class="form-control" asp-for="@Model.AlbumRelease" />
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Description</label>
+		<input type="text" class="form-control" asp-for="@Model.AlbumDescription" />
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Image file</label>
+		<input type="text" class="form-control" asp-for="@Model.ImageFile" />
+	</div>
+</form>
