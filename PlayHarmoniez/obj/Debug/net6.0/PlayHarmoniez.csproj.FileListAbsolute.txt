@@ -294,3 +294,4 @@ F:\Facultate\IndustrialInformaticsProject\PlayHarmoniez\bin\Debug\net6.0\Microso
 F:\Facultate\IndustrialInformaticsProject\PlayHarmoniez\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
 F:\Facultate\IndustrialInformaticsProject\PlayHarmoniez\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll
 F:\Facultate\IndustrialInformaticsProject\PlayHarmoniez\obj\Debug\net6.0\PlayHarmoniez.MvcApplicationPartsAssemblyInfo.cs
+F:\Facultate\IndustrialInformaticsProject\PlayHarmoniez\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
