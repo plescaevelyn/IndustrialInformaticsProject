@@ -3960,7 +3960,8 @@ textarea.form-control-lg {
 .tab-content > .active {
   display: block;
 }
-
+/*changed position from relative to fixed and added top:0 and left:0*/
+/*but nothing happened*/
 .navbar {
   position: relative;
   display: flex;

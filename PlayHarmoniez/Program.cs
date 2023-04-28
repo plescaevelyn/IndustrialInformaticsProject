@@ -6,8 +6,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//Made some modifications in options 
+// sqlServerOptionsAction: sqlOptions => { sqlOptions.EnableRetryOnFailure(); }
+// doesn't show exception anymore. this allows for multiple retries until connection
+
 builder.Services.AddDbContext<DataContext>(options =>
- options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+ options.UseSqlServer(builder.Configuration.GetConnectionString("Default"),
+ sqlServerOptionsAction: sqlOptions => { sqlOptions.EnableRetryOnFailure(); }));
 
 var app = builder.Build();
 

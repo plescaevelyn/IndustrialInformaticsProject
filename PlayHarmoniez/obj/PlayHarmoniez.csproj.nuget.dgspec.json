@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj": {}
+    "C:\\Users\\carvo\\Documents\\II_Project\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj": {}
   },
   "projects": {
-    "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj": {
+    "C:\\Users\\carvo\\Documents\\II_Project\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj",
+        "projectUniqueName": "C:\\Users\\carvo\\Documents\\II_Project\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj",
         "projectName": "PlayHarmoniez",
-        "projectPath": "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj",
-        "packagesPath": "C:\\Users\\evely\\.nuget\\packages\\",
-        "outputPath": "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\obj\\",
+        "projectPath": "C:\\Users\\carvo\\Documents\\II_Project\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj",
+        "packagesPath": "C:\\Users\\carvo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\carvo\\Documents\\II_Project\\IndustrialInformaticsProject\\PlayHarmoniez\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\evely\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\carvo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -63,6 +68,10 @@
             "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
               "target": "Package",
               "version": "[1.17.2, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[6.0.13, )"
             }
           },
           "imports": [
