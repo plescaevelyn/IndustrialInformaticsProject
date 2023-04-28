@@ -38,31 +38,82 @@ namespace PlayHarmoniez.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult AddAlbum(DataContext dataContext, Album album)
+        [HttpGet]
+        public IActionResult AddAlbum()
         {
-            _dataContext
-                .Albums
-                .Add(album);
-
             return View();
         }
 
-        public IActionResult UpdateAlbum(DataContext dataContext, Album album)
+        [HttpPost]
+        public async Task<IActionResult> AddAlbum(DataContext dataContext, Album album)
         {
-            _dataContext
-                .Albums
-                .Update(album);
+            Album albumModel = new Album()
+            {
+                Id = album.Id,
+                AlbumName = album.AlbumName,
+                AlbumAuthor = album.AlbumAuthor,
+                AlbumDescription = album.AlbumDescription,  
+                AlbumRelease = album.AlbumRelease,
+                ImageFile = album.ImageFile,
+                Songs = album.Songs
+            }; 
 
+            await dataContext
+                .Albums
+                .AddAsync(albumModel);
+
+            await dataContext
+                .SaveChangesAsync();
+
+            return View("AddAlbum");
+        }
+
+        [HttpGet]
+        public IActionResult UpdateAlbum()
+        {
             return View();
         }
 
-        public IActionResult DeleteAlbum(DataContext dataContext, Album album)
+        [HttpPost]
+        public async Task<IActionResult> UpdateAlbum(DataContext dataContext, Album album)
         {
-            _dataContext
-                .Albums
-                .Remove(album);
+            var albumModel = await _dataContext.Albums.FindAsync(album.Id);
 
+            if (albumModel != null)
+            {
+                albumModel.AlbumName = album.AlbumName;
+                albumModel.AlbumAuthor = album.AlbumAuthor;
+                albumModel.AlbumDescription = album.AlbumDescription;
+                albumModel.AlbumRelease = album.AlbumRelease;
+                albumModel.ImageFile = album.ImageFile;
+                albumModel.Songs = album.Songs;
+
+                await dataContext.SaveChangesAsync();
+                return RedirectToAction("AlbumList");
+            }
+
+            return RedirectToAction("AlbumList");
+        }
+
+        [HttpGet]
+        public IActionResult DeleteAlbum()
+        {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAlbum(DataContext dataContext, Album album)
+        {
+            var albumModel = await _dataContext.Albums.FindAsync(album.Id);
+
+            if (albumModel != null)
+            {
+                dataContext.Remove(album);
+
+                await dataContext.SaveChangesAsync();
+            }
+
+            return View("DeleteAlbum");
         }
 
         public IActionResult GetAlbumById(DataContext dataContext, int id)
