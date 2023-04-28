@@ -32,31 +32,78 @@
                 return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             }
 
-            public IActionResult AddUser(DataContext dataContext, User user)
+            [HttpGet]
+            public IActionResult AddUser()
             {
-                _dataContext
-                    .Users
-                    .Add(user);
-
                 return View();
             }
 
-            public IActionResult UpdateUser(DataContext dataContext, User user)
+            [HttpPost]
+            public async Task<IActionResult> AddUser(DataContext dataContext, User user)
             {
-                _dataContext
-                    .Users
-                    .Update(user);
+                User userModel = new User()
+                {
+                    Id = user.Id,
+                    Username = user.Username,
+                    Password = user.Password,
+                    AdminCheck = user.AdminCheck,
+                    LikedSong = user.LikedSong
+                };
 
+                await dataContext
+                    .Users
+                    .AddAsync(user);
+
+                await dataContext
+                    .SaveChangesAsync();
+
+                return View("AddUser");
+            }
+
+            [HttpGet]
+            public IActionResult UpdateUser()
+            {
                 return View();
             }
 
-            public IActionResult DeleteUser(DataContext dataContext, User user)
+            [HttpPost]
+            public async Task<IActionResult> UpdateUser(DataContext dataContext, User user)
             {
-                _dataContext
-                    .Users
-                    .Remove(user);
+                var userModel = await _dataContext.Users.FindAsync(user.Id);
 
+                if (userModel != null)
+                {
+                    userModel.Username = user.Username;
+                    userModel.Password = user.Password;
+                    userModel.AdminCheck = user.AdminCheck;
+                    userModel.LikedSong = user.LikedSong;
+
+                    await dataContext.SaveChangesAsync();
+                    return RedirectToAction("UserList");
+                }
+
+                return RedirectToAction("UserList");
+            }
+
+            [HttpGet]
+            public IActionResult DeleteUser()
+            {
                 return View();
+            }
+
+            [HttpPost]
+            public async Task<IActionResult> DeleteUser(DataContext dataContext, User user)
+            {
+                var userModel = await _dataContext.Users.FindAsync(user.Id);
+
+                if (userModel != null)
+                {
+                    dataContext.Remove(user);
+
+                    await dataContext.SaveChangesAsync();
+                }
+
+                return View("DeleteUser");
             }
 
             public IActionResult GetUsersById(DataContext dataContext, int id)

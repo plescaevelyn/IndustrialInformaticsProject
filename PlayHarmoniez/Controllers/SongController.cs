@@ -39,31 +39,90 @@
                 return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             }
 
-            public IActionResult AddSong(DataContext dataContext, Song song)
+            [HttpGet]
+            public IActionResult AddSong()
             {
-                _dataContext
-                    .Songs
-                    .Add(song);
-
                 return View();
             }
 
-            public IActionResult UpdateSong(DataContext dataContext, Song song)
+            [HttpPost]
+            public async Task<IActionResult> AddSong(DataContext dataContext, Song song)
             {
-                _dataContext
-                    .Songs
-                    .Update(song);
+                Song songModel = new Song()
+                {
+                    Id = song.Id,
+                    Title = song.Title,
+                    Author = song.Author,
+                    PublishData = song.PublishData,
+                    Description = song.Description,
+                    AlbumId = song.AlbumId,
+                    Album = song.Album,
+                    SoundFile = song.SoundFile,
+                    ImageFile = song.ImageFile,
+                    PlaylistSongs = song.PlaylistSongs,
+                    LikedSong = song.LikedSong
+                };
 
+                await dataContext
+                    .Songs
+                    .AddAsync(songModel);
+
+                await dataContext
+                    .SaveChangesAsync();
+
+                return View("AddSong");
+            }
+
+            [HttpGet]
+            public IActionResult UpdateSong()
+            {
                 return View();
             }
 
-            public IActionResult DeleteSong(DataContext dataContext, Song song)
+            [HttpPost]
+            public async Task<IActionResult> UpdateSong(DataContext dataContext, Song song)
             {
-                _dataContext
-                    .Songs
-                    .Remove(song);
+                var songModel = await _dataContext.Songs.FindAsync(song.Id);
 
+                if (songModel != null)
+                {
+                    songModel.Title = song.Title;
+                    songModel.Author = song.Author;
+                    songModel.PublishData = song.PublishData;
+                    songModel.Description = song.Description;
+                    songModel.AlbumId = song.AlbumId;
+                    songModel.Album = song.Album;
+                    songModel.SoundFile = song.SoundFile;
+                    songModel.ImageFile = song.ImageFile;
+                    songModel.PlaylistSongs = song.PlaylistSongs;
+                    songModel.LikedSong = song.LikedSong;
+
+                    await dataContext.SaveChangesAsync();
+                    return RedirectToAction("SongList");
+                }
+
+                return RedirectToAction("SongList");
+            }
+
+            [HttpGet]
+            public IActionResult DeleteSong()
+            {
                 return View();
+            }
+
+            [HttpPost]
+            public async Task<IActionResult> DeleteSong(DataContext dataContext, Song song)
+            {
+                var songModel = await _dataContext.Songs.FindAsync(song.Id);
+
+                if (songModel != null)
+                {
+                    dataContext.Remove(song);
+
+                    await dataContext.SaveChangesAsync();
+                }
+
+                return View("DeleteSong");
             }
 
             public IActionResult GetSongById(DataContext dataContext, int id)
