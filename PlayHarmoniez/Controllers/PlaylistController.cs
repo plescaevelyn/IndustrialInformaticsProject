@@ -39,31 +39,77 @@ namespace PlayHarmoniez.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult AddPlaylist(DataContext dataContext, Playlist playlist)
+        [HttpGet]
+        public IActionResult AddPlaylist()
         {
-            _dataContext
-                .Playlist
-                .Add(playlist);
-
             return View();
         }
 
-        public IActionResult UpdatePlaylist(DataContext dataContext, Playlist playlist)
+        [HttpPost]
+        public async Task<IActionResult> AddPlaylist(DataContext dataContext, Playlist playlist)
         {
-            _dataContext
-                .Playlist
-                .Update(playlist);
+            Playlist playlist1 = new Playlist()
+            {
+                Id = playlist.Id,
+                UserId = playlist.UserId,
+                PlaylistSongs = playlist.PlaylistSongs,
+                User = playlist.User,
+            };
 
+            await dataContext
+                .Playlist
+                .AddAsync(playlist1);
+
+            await dataContext
+                .SaveChangesAsync();
+
+            return View("AddPlaylist");
+        }
+
+        [HttpGet]
+        public IActionResult UpdatePlaylist()
+        {
             return View();
         }
 
-        public IActionResult DeletePlaylist(DataContext dataContext, Playlist playlist)
+        [HttpPost]
+        public async Task<IActionResult> UpdatePlaylist(DataContext dataContext, Playlist playlist)
         {
-            _dataContext
-                .Playlist
-                .Remove(playlist);
+            var playlistModel = await _dataContext.Playlist.FindAsync(playlist.Id);
 
+            if (playlistModel != null)
+            {
+                playlistModel.PlaylistId = playlist.PlaylistId;
+                playlistModel.UserId = playlist.UserId;
+                playlistModel.PlaylistSongs = playlist.PlaylistSongs;
+                playlistModel.User = playlist.User;
+
+                await dataContext.SaveChangesAsync();
+                return RedirectToAction("PlaylistList");
+            }
+
+            return RedirectToAction("PlaylistList");
+        }
+
+        [HttpGet]
+        public IActionResult DeletePlaylist()
+        {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeletePlaylist(DataContext dataContext, Playlist playlist)
+        {
+            var playlistModel = await _dataContext.LikedSongs.FindAsync(playlist.Id);
+
+            if (playlistModel != null)
+            {
+                dataContext.Remove(playlist);
+
+                await dataContext.SaveChangesAsync();
+            }
+
+            return View("DeletePlaylist");
         }
 
         public IActionResult GetPlaylistById(DataContext dataContext, int id)

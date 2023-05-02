@@ -39,31 +39,78 @@ namespace PlayHarmoniez.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult AddLikedSong(DataContext dataContext, LikedSong likedSong)
+        [HttpGet]
+        public IActionResult AddLikedSong()
         {
-            _dataContext
-                .LikedSongs
-                .Add(likedSong);
-
             return View();
         }
 
-        public IActionResult UpdateLikedSong(DataContext dataContext, LikedSong likedSong)
+        [HttpPost]
+        public async Task<IActionResult> AddLikedSong(DataContext dataContext, LikedSong likedSong)
         {
-            _dataContext
-                .LikedSongs
-                .Update(likedSong);
+            LikedSong likedSong1 = new LikedSong()
+            {
+                Id = likedSong.Id,
+                UserId = likedSong.UserId,
+                SongId = likedSong.SongId,
+                User = likedSong.User,
+                Song = likedSong.Song
+            };
 
+            await dataContext
+                .LikedSongs
+                .AddAsync(likedSong1);
+
+            await dataContext
+                .SaveChangesAsync();
+
+            return View("AddLikedSong");
+        }
+
+        [HttpGet]
+        public IActionResult UpdateLikedSong()
+        {
             return View();
         }
 
-        public IActionResult DeleteLikedSong(DataContext dataContext, LikedSong likedSong)
+        [HttpPost]
+        public async Task<IActionResult> UpdateLikedSong(DataContext dataContext, LikedSong likedSong)
         {
-            _dataContext
-                .LikedSongs
-                .Remove(likedSong);
+            var likedSongModel = await _dataContext.LikedSongs.FindAsync(likedSong.Id);
 
+            if (likedSongModel != null)
+            {
+                likedSongModel.UserId = likedSong.UserId;
+                likedSongModel.SongId = likedSong.SongId;
+                likedSongModel.User = likedSong.User;
+                likedSongModel.Song = likedSong.Song;
+
+                await dataContext.SaveChangesAsync();
+                return RedirectToAction("LikedSongList");
+            }
+
+            return RedirectToAction("LikedSongList");
+        }
+
+        [HttpGet]
+        public IActionResult DeleteLikedSong()
+        {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteLikedSong(DataContext dataContext, LikedSong likedSong)
+        {
+            var likedSongModel = await _dataContext.LikedSongs.FindAsync(likedSong.Id);
+
+            if (likedSongModel != null)
+            {
+                dataContext.Remove(likedSong);
+
+                await dataContext.SaveChangesAsync();
+            }
+
+            return View("DeleteLikedSong");
         }
 
         public IActionResult GetLikedSongById(DataContext dataContext, int id)

@@ -9,6 +9,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="App_Data\Album_Images\**" />
+    <Compile Remove="App_Data\Song_files\**" />
+    <Compile Remove="App_Data\Song_Images\**" />
+    <Content Remove="App_Data\Album_Images\**" />
+    <Content Remove="App_Data\Song_files\**" />
+    <Content Remove="App_Data\Song_Images\**" />
+    <EmbeddedResource Remove="App_Data\Album_Images\**" />
+    <EmbeddedResource Remove="App_Data\Song_files\**" />
+    <EmbeddedResource Remove="App_Data\Song_Images\**" />
+    <None Remove="App_Data\Album_Images\**" />
+    <None Remove="App_Data\Song_files\**" />
+    <None Remove="App_Data\Song_Images\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
