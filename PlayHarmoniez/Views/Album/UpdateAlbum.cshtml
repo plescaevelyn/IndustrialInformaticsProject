@@ -3,6 +3,10 @@
 <h1> Modify Album </h1>
 <form method="post" action="UpdateAlbum" class="mt-5">
 	<div class="mb-3">
+		<label for="" class="form-label">Id</label>
+		<input type="text" class="form-control" asp-for="@Model.Id" readonly />
+	</div>
+	<div class="mb-3">
 		<label for="" class="form-label">Name</label>
 		<input type="text" class="form-control" asp-for="@Model.AlbumName" />
 	</div>
@@ -23,6 +27,5 @@
 		<input type="text" class="form-control" asp-for="@Model.ImageFile" />
 	</div>
 	<button type="submit" class="btn btn-primary">Submit</button>
-	<button type="submit" class="btn btn-danger" asp-asp-controller="Album"
-	asp-action="DeleteAlbum">Delete</button>
+	<button type="submit" class="btn btn-danger" asp-asp-controller="Album" asp-action="DeleteAlbum">Delete</button>
 </form>

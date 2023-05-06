@@ -1,0 +1,26 @@
+﻿<html>
+<head>
+
+    <link rel="stylesheet" href="~/css/Style.css" />
+</head>
+
+<body>
+    <div class="login">
+        <h1>Login to Web App</h1>
+
+        <form method="post" enctype="multipart/form-data" asp-controller="User" asp-action="Login">
+            <p><input type="text" name="username" value="" placeholder="Username or Email" required></p>
+            <p><input type="password" name="passcode" value="" placeholder="Password" required></p>
+            <p class="remember_me">
+                <label>
+                    <input type="checkbox" name="remember_me" id="remember_me">
+                    Remember me on this computer
+                </label>
+            </p>
+            <p class="submit"><input type="submit" name="commit" value="Login"></p>
+            <hr />
+            @ViewBag.username
+        </form>
+    </div>
+</body>
+</html>

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.AspNetCore.Mvc;
+
 using PlayHarmoniez.App_Data;
+using PlayHarmoniez.Controllers.PlayHarmoniez.Controllers;
 using PlayHarmoniez.Models;
 using System.Diagnostics;
 
@@ -10,27 +12,13 @@ namespace PlayHarmoniez.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly DataContext _dataContext;
+        private readonly SongController _songController;
 
-        public LikedSongController(ILogger<HomeController> logger, DataContext dataContext)
+        public LikedSongController(ILogger<HomeController> logger, DataContext dataContext,SongController songController)
         {
             _logger = logger;
             _dataContext = dataContext;
-        }
-
-        // modify index
-        public IActionResult Index()
-        {
-            var songs = _dataContext
-                .Songs
-                .Include(song => song.LikedSong)
-                .ToList();
-
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
+            _songController = songController;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -40,86 +28,36 @@ namespace PlayHarmoniez.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddLikedSong()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddLikedSong(DataContext dataContext, LikedSong likedSong)
-        {
-            LikedSong likedSong1 = new LikedSong()
-            {
-                Id = likedSong.Id,
-                UserId = likedSong.UserId,
-                SongId = likedSong.SongId,
-                User = likedSong.User,
-                Song = likedSong.Song
-            };
-
-            await dataContext
-                .LikedSongs
-                .AddAsync(likedSong1);
-
-            await dataContext
-                .SaveChangesAsync();
-
-            return View("AddLikedSong");
-        }
-
-        [HttpGet]
-        public IActionResult UpdateLikedSong()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UpdateLikedSong(DataContext dataContext, LikedSong likedSong)
-        {
-            var likedSongModel = await _dataContext.LikedSongs.FindAsync(likedSong.Id);
-
-            if (likedSongModel != null)
-            {
-                likedSongModel.UserId = likedSong.UserId;
-                likedSongModel.SongId = likedSong.SongId;
-                likedSongModel.User = likedSong.User;
-                likedSongModel.Song = likedSong.Song;
-
-                await dataContext.SaveChangesAsync();
-                return RedirectToAction("LikedSongList");
-            }
-
-            return RedirectToAction("LikedSongList");
-        }
-
-        [HttpGet]
         public IActionResult DeleteLikedSong()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteLikedSong(DataContext dataContext, LikedSong likedSong)
+        public async Task<IActionResult> DeleteLikedSong(LikedSong likedSong)
         {
             var likedSongModel = await _dataContext.LikedSongs.FindAsync(likedSong.Id);
 
             if (likedSongModel != null)
             {
-                dataContext.Remove(likedSong);
+                _dataContext.Remove(likedSong);
 
-                await dataContext.SaveChangesAsync();
+                await _dataContext.SaveChangesAsync();
             }
 
             return View("DeleteLikedSong");
         }
-
-        public IActionResult GetLikedSongById(DataContext dataContext, int id)
+        public IActionResult GetLikedSongs()
         {
-            _dataContext
-                .LikedSongs
-                .SingleOrDefault(likedSong => likedSong.Id == id);
-
-            return View();
+            int userId = (int)HttpContext.Session.GetInt32("UserId");
+            var songs_id = _dataContext.LikedSongs.Where(e => e.UserId == userId).ToList();
+            List<Song> songs = new List<Song>();
+            foreach(var likedSong in songs_id)
+            {
+                var song = _songController.GetSongById(likedSong.SongId);
+                songs.Add((Song)song);
+            }
+            return View(songs);
         }
     }
 }

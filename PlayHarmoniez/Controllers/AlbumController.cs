@@ -17,20 +17,6 @@ namespace PlayHarmoniez.Controllers
             _dataContext = dataContext;
         }
 
-        public IActionResult Index()
-        {
-            var songs = _dataContext
-                .Songs
-                .Include(song => song.Album)
-                .ToList();
-
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -47,7 +33,7 @@ namespace PlayHarmoniez.Controllers
             return View(albums);
 
         }
-        // Method to add album -> working.... kinda? does change database BUTIT DOES ?
+        // Method to add album 
         [HttpGet]
         public IActionResult AddAlbum()
         {
@@ -74,7 +60,7 @@ namespace PlayHarmoniez.Controllers
 
             return RedirectToAction("AlbumList");
         }
-        // Method to update album -> work in progress
+        // Method to update album 
         [HttpGet]
         public async Task<IActionResult> UpdateAlbum(int Id)
         {
@@ -95,7 +81,6 @@ namespace PlayHarmoniez.Controllers
 
             return View(updatedAlbum);
         }
-
         [HttpPost]
         public async Task<IActionResult> UpdateAlbum(Album updatedAlbum)
         {
@@ -109,38 +94,39 @@ namespace PlayHarmoniez.Controllers
                 album.AlbumRelease = updatedAlbum.AlbumRelease;
                 album.ImageFile = updatedAlbum.ImageFile;
                 album.Songs = updatedAlbum.Songs;
+
                 await _dataContext.SaveChangesAsync();
                 return RedirectToAction("AlbumList");
             }
 
             return RedirectToAction("AlbumList");
         }
-
-        // Method to delete album -> work in progress
-
+        // Delete Album
         [HttpPost]
-        public async Task<IActionResult> DeleteAlbum(Album album)
+        public async Task<IActionResult> DeleteAlbum(int id)
         {
-            var albumModel = await _dataContext.Albums.FindAsync(album.Id);
-
-            if (albumModel != null)
+            if (_dataContext.Albums == null)
             {
-                _dataContext.Remove(album);
-
-                await _dataContext.SaveChangesAsync();
-                return RedirectToAction("AlbumList");
+                return Problem("Entity set is null.");
             }
 
+            var album = await _dataContext.Albums.FindAsync(id);
+            _dataContext.Albums.Remove(album);
+            await _dataContext.SaveChangesAsync();
             return RedirectToAction("AlbumList");
         }
 
-        public IActionResult GetAlbumById(int id)
+        [HttpGet]
+        public async Task<IActionResult> GetAlbumByName(string name)
         {
-            _dataContext
-                .Albums
-                .SingleOrDefault(album => album.Id == id);
 
-            return View();
+            Album album = await _dataContext.Albums.FirstOrDefaultAsync(e => e.AlbumName == name);
+            //TO DO: adding an error window
+            if (album == null)
+                return RedirectToAction("AddAlbum");
+
+            return View(album);
         }
+
     }
 }
