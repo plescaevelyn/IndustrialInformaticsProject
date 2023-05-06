@@ -1,4 +1,4 @@
-﻿namespace PlayHarmoniez.Controllers
+namespace PlayHarmoniez.Controllers
 {
     using global::PlayHarmoniez.App_Data;
     using global::PlayHarmoniez.Models;
@@ -18,26 +18,24 @@
                 _logger = logger;
                 _dataContext = dataContext;
             }
-            public IActionResult Index()
-            {
-                var songs = _dataContext
-                    .Songs
-                    .Include(song => song.Album)
-                    .ToList();
-
-                return View();
-            }
-
-            public IActionResult Privacy()
-            {
-                return View();
-            }
 
             [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
             public IActionResult Error()
             {
                 return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             }
+
+            // Method to get all Songs
+
+            [HttpGet]
+            public async Task<IActionResult> SongsList() { 
+            
+                List<Song>songs=await _dataContext.Songs.ToListAsync();
+                return View(songs);
+            
+            }
+
+            // Method to add song 
 
             [HttpGet]
             public IActionResult AddSong()
@@ -46,7 +44,7 @@
             }
 
             [HttpPost]
-            public async Task<IActionResult> AddSong(DataContext dataContext, Song song)
+            public async Task<IActionResult> AddSong(Song song)
             {
                 Song songModel = new Song()
                 {
@@ -63,24 +61,44 @@
                     LikedSong = song.LikedSong
                 };
 
-                await dataContext
+                await _dataContext
                     .Songs
                     .AddAsync(songModel);
 
-                await dataContext
+                await _dataContext
                     .SaveChangesAsync();
 
-                return View("AddSong");
+                return View("SongsList");
             }
 
+            // Method to update song 
             [HttpGet]
-            public IActionResult UpdateSong()
+            public async Task<IActionResult> UpdateSong(int Id)
             {
-                return View();
+                Song song = await _dataContext.Songs.FirstOrDefaultAsync(e => e.Id == Id);
+
+                if (song == null)
+                    return RedirectToAction("SongsList");
+                Song updatedSong = new Song()
+                {
+                    Title = song.Title,
+                    Author = song.Author,
+                    PublishData = song.PublishData,
+                    Description = song.Description,
+                    AlbumId = song.AlbumId,
+                    Album = song.Album,
+                    SoundFile = song.SoundFile,
+                    ImageFile = song.ImageFile,
+                    PlaylistSongs = song.PlaylistSongs,
+                    LikedSong = song.LikedSong,
+
+            };
+
+                return View(updatedSong);
             }
 
             [HttpPost]
-            public async Task<IActionResult> UpdateSong(DataContext dataContext, Song song)
+            public async Task<IActionResult> UpdateSong(Song song)
             {
                 var songModel = await _dataContext.Songs.FindAsync(song.Id);
 
@@ -97,11 +115,11 @@
                     songModel.PlaylistSongs = song.PlaylistSongs;
                     songModel.LikedSong = song.LikedSong;
 
-                    await dataContext.SaveChangesAsync();
-                    return RedirectToAction("SongList");
+                    await _dataContext.SaveChangesAsync();
+                    return RedirectToAction("SongsList");
                 }
 
-                return RedirectToAction("SongList");
+                return RedirectToAction("SongsList");
             }
 
             [HttpGet]
@@ -111,28 +129,28 @@
             }
 
             [HttpPost]
-            public async Task<IActionResult> DeleteSong(DataContext dataContext, Song song)
+            public async Task<IActionResult> DeleteSong(int id)
             {
-                var songModel = await _dataContext.Songs.FindAsync(song.Id);
-
-                if (songModel != null)
+                if (_dataContext.Songs == null)
                 {
-                    dataContext.Remove(song);
-
-                    await dataContext.SaveChangesAsync();
+                    return Problem("Entity set is null.");
                 }
-
-                return View("DeleteSong");
+                var song = await _dataContext.Songs.FindAsync(id);
+                _dataContext.Songs.Remove(song);
+                await _dataContext.SaveChangesAsync();
+                return RedirectToAction("SongsList");
             }
 
-            public IActionResult GetSongById(DataContext dataContext, int id)
-            {
-                _dataContext
+            public IActionResult GetSongById(int id)
+            {            
+                var song =  _dataContext
                     .Songs
-                    .SingleOrDefault(song => song.Id == id);
+                    .FindAsync(id);
 
-                return View();
+                return View(song);
+
             }
+           
         }
     }
 

@@ -1,0 +1,28 @@
+﻿@model List<PlayHarmoniez.Models.Album>
+
+<a href="AddAlbum">Would you like to add an album?</a>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Published Date</th>
+            <th scope="col">Description</th>
+            <th scope="col">Album Cover</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var album in Model)
+        {
+            <tr class="table-active">
+                <td>@album.AlbumName</td>
+                <td>@album.AlbumAuthor</td>
+                <td>@album.AlbumRelease.ToString("dd-mm-yyyy")</td>
+                <td>@album.AlbumDescription</td>
+                <td><img src=@album.ImageFile.ToString() style="width:40px;height:40px;"></td>
+                <td><a href="UpdateAlbum/@album.Id">Modify</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PlayHarmoniez.App_Data;
 using PlayHarmoniez.Models;
@@ -17,20 +17,6 @@ namespace PlayHarmoniez.Controllers
             _dataContext = dataContext;
         }
 
-        public IActionResult Index()
-        {
-            var songs = _dataContext
-                .Songs
-                .Include(song => song.Album)
-                .ToList();
-
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -38,6 +24,16 @@ namespace PlayHarmoniez.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        // Method to get all Albums
+        [HttpGet]
+        public async Task<IActionResult> AlbumList()
+        {
+
+            List<Album> albums = await _dataContext.Albums.ToListAsync();
+            return View(albums);
+
+        }
+        // Method to add album 
         [HttpGet]
         public IActionResult AddAlbum()
         {
@@ -45,84 +41,92 @@ namespace PlayHarmoniez.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAlbum(DataContext dataContext, Album album)
+        public async Task<IActionResult> AddAlbum( Album album)
         {
             Album albumModel = new Album()
             {
                 Id = album.Id,
                 AlbumName = album.AlbumName,
                 AlbumAuthor = album.AlbumAuthor,
-                AlbumDescription = album.AlbumDescription,  
+                AlbumDescription = album.AlbumDescription,
                 AlbumRelease = album.AlbumRelease,
                 ImageFile = album.ImageFile,
                 Songs = album.Songs
-            }; 
+            };
 
-            await dataContext
-                .Albums
-                .AddAsync(albumModel);
+            await _dataContext.Albums.AddAsync(albumModel);
 
-            await dataContext
-                .SaveChangesAsync();
+            await _dataContext.SaveChangesAsync();
 
-            return View("AddAlbum");
+            return RedirectToAction("AlbumList");
         }
-
+        // Method to update album 
         [HttpGet]
-        public IActionResult UpdateAlbum()
+        public async Task<IActionResult> UpdateAlbum(int Id)
         {
-            return View();
-        }
+            Album album = await _dataContext.Albums.FirstOrDefaultAsync(e=> e.Id ==Id );
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateAlbum(DataContext dataContext, Album album)
-        {
-            var albumModel = await _dataContext.Albums.FindAsync(album.Id);
-
-            if (albumModel != null)
+            if (album == null)
+                return RedirectToAction("AlbumList");
+            Album updatedAlbum = new Album()
             {
-                albumModel.AlbumName = album.AlbumName;
-                albumModel.AlbumAuthor = album.AlbumAuthor;
-                albumModel.AlbumDescription = album.AlbumDescription;
-                albumModel.AlbumRelease = album.AlbumRelease;
-                albumModel.ImageFile = album.ImageFile;
-                albumModel.Songs = album.Songs;
+                AlbumName = album.AlbumName,
+                AlbumAuthor = album.AlbumAuthor,
+                AlbumDescription = album.AlbumDescription,
+                AlbumRelease = album.AlbumRelease,
+                ImageFile = album.ImageFile,
+                Songs = album.Songs,
 
-                await dataContext.SaveChangesAsync();
+            };
+
+            return View(updatedAlbum);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateAlbum(Album updatedAlbum)
+        {
+            var album = await _dataContext.Albums.FindAsync(updatedAlbum.Id);
+
+            if (album != null)
+            {
+                album.AlbumName = updatedAlbum.AlbumName;
+                album.AlbumAuthor = updatedAlbum.AlbumAuthor;
+                album.AlbumDescription = updatedAlbum.AlbumDescription;
+                album.AlbumRelease = updatedAlbum.AlbumRelease;
+                album.ImageFile = updatedAlbum.ImageFile;
+                album.Songs = updatedAlbum.Songs;
+
+                await _dataContext.SaveChangesAsync();
                 return RedirectToAction("AlbumList");
             }
 
             return RedirectToAction("AlbumList");
         }
-
-        [HttpGet]
-        public IActionResult DeleteAlbum()
-        {
-            return View();
-        }
-
+        // Delete Album
         [HttpPost]
-        public async Task<IActionResult> DeleteAlbum(DataContext dataContext, Album album)
+        public async Task<IActionResult> DeleteAlbum(int id)
         {
-            var albumModel = await _dataContext.Albums.FindAsync(album.Id);
-
-            if (albumModel != null)
+            if (_dataContext.Albums == null)
             {
-                dataContext.Remove(album);
-
-                await dataContext.SaveChangesAsync();
+                return Problem("Entity set is null.");
             }
 
-            return View("DeleteAlbum");
+            var album = await _dataContext.Albums.FindAsync(id);
+            _dataContext.Albums.Remove(album);
+            await _dataContext.SaveChangesAsync();
+            return RedirectToAction("AlbumList");
         }
 
-        public IActionResult GetAlbumById(DataContext dataContext, int id)
+        [HttpGet]
+        public async Task<IActionResult> GetAlbumByName(string name)
         {
-            _dataContext
-                .Albums
-                .SingleOrDefault(album => album.Id == id);
 
-            return View();
+            Album album = await _dataContext.Albums.FirstOrDefaultAsync(e => e.AlbumName == name);
+            //TO DO: adding an error window
+            if (album == null)
+                return RedirectToAction("AddAlbum");
+
+            return View(album);
         }
+
     }
 }

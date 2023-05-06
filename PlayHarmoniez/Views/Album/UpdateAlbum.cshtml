@@ -1,5 +1,31 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model Album
+
+<h1> Modify Album </h1>
+<form method="post" action="UpdateAlbum" class="mt-5">
+	<div class="mb-3">
+		<label for="" class="form-label">Id</label>
+		<input type="text" class="form-control" asp-for="@Model.Id" readonly />
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Name</label>
+		<input type="text" class="form-control" asp-for="@Model.AlbumName" />
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Author</label>
+		<input type="text" class="form-control" asp-for="@Model.AlbumAuthor" />
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Release date</label>
+		<input type="date" class="form-control" asp-for="@Model.AlbumRelease" />
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Description</label>
+		<input type="text" class="form-control" asp-for="@Model.AlbumDescription" />
+	</div>
+	<div class="mb-3">
+		<label for="" class="form-label">Image file</label>
+		<input type="text" class="form-control" asp-for="@Model.ImageFile" />
+	</div>
+	<button type="submit" class="btn btn-primary">Submit</button>
+	<button type="submit" class="btn btn-danger" asp-asp-controller="Album" asp-action="DeleteAlbum">Delete</button>
+</form>

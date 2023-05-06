@@ -1,4 +1,4 @@
-﻿namespace PlayHarmoniez.Controllers
+namespace PlayHarmoniez.Controllers
 {
     using global::PlayHarmoniez.App_Data;
     using global::PlayHarmoniez.Models;
@@ -30,6 +30,29 @@
             public IActionResult Error()
             {
                 return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            }
+
+            public IActionResult Login()
+            {
+                return View();
+            }
+
+            [HttpPost]
+            public async Task<IActionResult> Login(string username, string passcode)
+            {
+                var issuccess = await _dataContext.Users.FirstOrDefaultAsync(authUser => authUser.Username == username && authUser.Password == passcode);
+
+                if (issuccess != null)
+                {
+                    ViewBag.username = string.Format("Successfully logged-in", username);
+                    HttpContext.Session.SetInt32("UserId", issuccess.Id);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ViewBag.username = string.Format("Login Failed ", username);
+                    return View();
+                }
             }
 
             [HttpGet]

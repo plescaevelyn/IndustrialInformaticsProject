@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PlayHarmoniez.Models;
-// using Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityDbContext;
+
 
 namespace PlayHarmoniez.App_Data
 {
@@ -18,5 +18,15 @@ namespace PlayHarmoniez.App_Data
         public DbSet<PlaylistSong> PlaylistSongs { get; set; }
         public DbSet<Song> Songs { get; set; }
         public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<User>(entity => {
+                entity.HasKey(k => k.Id);
+            });
+        }
+
+
     }
 }

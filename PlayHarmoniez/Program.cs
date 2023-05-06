@@ -1,13 +1,28 @@
 using Microsoft.EntityFrameworkCore;
 using PlayHarmoniez.App_Data;
+using Microsoft.AspNetCore.Identity;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Session requirments
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+   // options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
 builder.Services.AddDbContext<DataContext>(options =>
  options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+//builder.Services.AddScoped<ILogin,AuthenticateLogin>; cica tre folosit dar imi da eroare
+
 
 var app = builder.Build();
 
@@ -23,8 +38,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();;
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
