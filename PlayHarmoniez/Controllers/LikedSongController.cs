@@ -12,13 +12,11 @@ namespace PlayHarmoniez.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly DataContext _dataContext;
-        private readonly SongController _songController;
 
-        public LikedSongController(ILogger<HomeController> logger, DataContext dataContext,SongController songController)
+        public LikedSongController(ILogger<HomeController> logger, DataContext dataContext)
         {
             _logger = logger;
             _dataContext = dataContext;
-            _songController = songController;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -27,35 +25,40 @@ namespace PlayHarmoniez.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [HttpGet]
-        public IActionResult DeleteLikedSong()
+       
+        public async Task<IActionResult> DeleteLikedSong(int Id)
         {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteLikedSong(LikedSong likedSong)
-        {
-            var likedSongModel = await _dataContext.LikedSongs.FindAsync(likedSong.Id);
-
-            if (likedSongModel != null)
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (_dataContext.LikedSongs == null)
             {
-                _dataContext.Remove(likedSong);
-
-                await _dataContext.SaveChangesAsync();
+                return Problem("Entity set is null.");
             }
 
-            return View("DeleteLikedSong");
+            //var likedSong = await _dataContext.LikedSongs.FindAsync(Id,userId);
+            //_dataContext.LikedSongs.Remove(likedSong);
+            //await _dataContext.SaveChangesAsync();
+            var songs_id = _dataContext.LikedSongs.Where(e => e.UserId == userId).ToList();
+            foreach (var likedSong in songs_id)
+            {
+                if(likedSong.SongId==Id)
+                _dataContext.LikedSongs.Remove(likedSong);
+                await _dataContext.SaveChangesAsync();
+            }
+            return RedirectToAction("GetLikedSongs");
         }
         public IActionResult GetLikedSongs()
         {
-            int userId = (int)HttpContext.Session.GetInt32("UserId");
+            int ? userId = HttpContext.Session.GetInt32("UserId");
             var songs_id = _dataContext.LikedSongs.Where(e => e.UserId == userId).ToList();
             List<Song> songs = new List<Song>();
-            foreach(var likedSong in songs_id)
+            SongController songController = new SongController(_logger,_dataContext);
+            foreach (var likedSong in songs_id)
             {
-                var song = _songController.GetSongById(likedSong.SongId);
-                songs.Add((Song)song);
+                var song = songController.GetSongById(likedSong.SongId);
+                if (song != null)
+                {
+                    songs.Add(song);
+                }
             }
             return View(songs);
         }

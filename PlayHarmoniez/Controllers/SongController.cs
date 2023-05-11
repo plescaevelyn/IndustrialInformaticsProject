@@ -68,7 +68,7 @@ namespace PlayHarmoniez.Controllers
                 await _dataContext
                     .SaveChangesAsync();
 
-                return View("SongsList");
+                return RedirectToAction("SongsList");
             }
 
             // Method to update song 
@@ -141,17 +141,26 @@ namespace PlayHarmoniez.Controllers
                 return RedirectToAction("SongsList");
             }
 
-            public IActionResult GetSongById(int id)
-            {            
-                var song =  _dataContext
-                    .Songs
-                    .FindAsync(id);
-
-                return View(song);
-
+            public Song? GetSongById(int id)
+            {
+                var songModel = _dataContext.Songs.Find(id);
+                if (songModel != null)
+                {
+                    return new Song
+                    {
+                        Id = songModel.Id,
+                        Title = songModel.Title,
+                        Author = songModel.Author,
+                        PublishData = songModel.PublishData,
+                        Description = songModel.Description,
+                        AlbumId = songModel.AlbumId,
+                        SoundFile = songModel.SoundFile,
+                        ImageFile = songModel.ImageFile,
+                    };
+                }
+                return null;
             }
-           
+
+        }         
         }
     }
-
-}
