@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj": {}
+    "F:\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj": {}
   },
   "projects": {
-    "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj": {
+    "F:\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj",
+        "projectUniqueName": "F:\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj",
         "projectName": "PlayHarmoniez",
-        "projectPath": "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj",
+        "projectPath": "F:\\IndustrialInformaticsProject\\PlayHarmoniez\\PlayHarmoniez.csproj",
         "packagesPath": "C:\\Users\\evely\\.nuget\\packages\\",
-        "outputPath": "F:\\Facultate\\IndustrialInformaticsProject\\PlayHarmoniez\\obj\\",
+        "outputPath": "F:\\IndustrialInformaticsProject\\PlayHarmoniez\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\evely\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,6 +40,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Azure.Storage.Blobs": {
+              "target": "Package",
+              "version": "[12.16.0, )"
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[6.0.15, )"
@@ -75,6 +79,10 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[6.0.13, )"
+            },
+            "jose-jwt": {
+              "target": "Package",
+              "version": "[4.1.0, )"
             }
           },
           "imports": [

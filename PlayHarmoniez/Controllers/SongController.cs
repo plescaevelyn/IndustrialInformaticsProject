@@ -1,5 +1,7 @@
 namespace PlayHarmoniez.Controllers
 {
+    using Azure.Storage.Blobs;
+    using Azure.Storage.Blobs.Models;
     using global::PlayHarmoniez.App_Data;
     using global::PlayHarmoniez.Models;
     using Microsoft.AspNetCore.Mvc;
@@ -12,11 +14,13 @@ namespace PlayHarmoniez.Controllers
         {
             private readonly ILogger<HomeController> _logger;
             private readonly DataContext _dataContext;
+            private readonly BlobServiceClient _blobClient;
 
-            public SongController(ILogger<HomeController> logger, DataContext dataContext)
+            public SongController(ILogger<HomeController> logger, DataContext dataContext, BlobServiceClient blobClient)
             {
                 _logger = logger;
                 _dataContext = dataContext;
+                _blobClient = blobClient;
             }
 
             [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -25,8 +29,6 @@ namespace PlayHarmoniez.Controllers
                 return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             }
 
-            // Method to get all Songs
-
             [HttpGet]
             public async Task<IActionResult> SongsList() { 
             
@@ -34,8 +36,6 @@ namespace PlayHarmoniez.Controllers
                 return View(songs);
             
             }
-
-            // Method to add song 
 
             [HttpGet]
             public IActionResult AddSong()
@@ -71,7 +71,22 @@ namespace PlayHarmoniez.Controllers
                 return View("SongsList");
             }
 
-            // Method to update song 
+            public async Task<string> UploadSong(string name, string containerName, IFormFile file)
+            {
+                var containerClient = _blobClient.GetBlobContainerClient(containerName);
+                var blobClient = containerClient.GetBlobClient(name);
+
+                var httpHeaders = new BlobHttpHeaders()
+                {
+                    ContentType = file.ContentType
+                };
+
+                await blobClient.UploadAsync(file.OpenReadStream(), httpHeaders);
+                var blobUrl = blobClient.Uri.AbsoluteUri;
+
+                return blobUrl;
+            }
+
             [HttpGet]
             public async Task<IActionResult> UpdateSong(int Id)
             {
@@ -79,6 +94,7 @@ namespace PlayHarmoniez.Controllers
 
                 if (song == null)
                     return RedirectToAction("SongsList");
+
                 Song updatedSong = new Song()
                 {
                     Title = song.Title,
@@ -91,8 +107,7 @@ namespace PlayHarmoniez.Controllers
                     ImageFile = song.ImageFile,
                     PlaylistSongs = song.PlaylistSongs,
                     LikedSong = song.LikedSong,
-
-            };
+                };
 
                 return View(updatedSong);
             }
@@ -141,6 +156,14 @@ namespace PlayHarmoniez.Controllers
                 return RedirectToAction("SongsList");
             }
 
+            public async Task DeleteImage(string name, string containerName)
+            {
+                var containerClient = _blobClient.GetBlobContainerClient(containerName);
+                var blobClient = containerClient.GetBlobClient(name);
+
+                await blobClient.DeleteIfExistsAsync();
+            }
+
             public IActionResult GetSongById(int id)
             {            
                 var song =  _dataContext
@@ -148,10 +171,7 @@ namespace PlayHarmoniez.Controllers
                     .FindAsync(id);
 
                 return View(song);
-
-            }
-           
+            }           
         }
     }
-
 }
