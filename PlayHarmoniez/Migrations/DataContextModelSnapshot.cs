@@ -51,7 +51,7 @@ namespace PlayHarmoniez.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Albums");
+                    b.ToTable("Albums", (string)null);
                 });
 
             modelBuilder.Entity("PlayHarmoniez.Models.LikedSong", b =>
@@ -75,7 +75,7 @@ namespace PlayHarmoniez.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("LikedSongs");
+                    b.ToTable("LikedSongs", (string)null);
                 });
 
             modelBuilder.Entity("PlayHarmoniez.Models.Playlist", b =>
@@ -97,7 +97,7 @@ namespace PlayHarmoniez.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Playlist");
+                    b.ToTable("Playlist", (string)null);
                 });
 
             modelBuilder.Entity("PlayHarmoniez.Models.PlaylistSong", b =>
@@ -120,7 +120,7 @@ namespace PlayHarmoniez.Migrations
 
                     b.HasIndex("SongId");
 
-                    b.ToTable("PlaylistSongs");
+                    b.ToTable("PlaylistSongs", (string)null);
                 });
 
             modelBuilder.Entity("PlayHarmoniez.Models.Song", b =>
@@ -161,7 +161,7 @@ namespace PlayHarmoniez.Migrations
 
                     b.HasIndex("AlbumId");
 
-                    b.ToTable("Songs");
+                    b.ToTable("Songs", (string)null);
                 });
 
             modelBuilder.Entity("PlayHarmoniez.Models.User", b =>
@@ -185,7 +185,7 @@ namespace PlayHarmoniez.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("PlayHarmoniez.Models.LikedSong", b =>

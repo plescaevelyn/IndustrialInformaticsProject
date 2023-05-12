@@ -13,11 +13,13 @@ namespace PlayHarmoniez.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly DataContext _dataContext;
         private readonly BlobServiceClient _blobClient;
+        private readonly string albumContainerName;
         public AlbumController(ILogger<HomeController> logger, DataContext dataContext, BlobServiceClient blobClient)
         {
             _logger = logger;
             _dataContext = dataContext;
             _blobClient = blobClient;
+            albumContainerName = "albumcover";
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -53,7 +55,7 @@ namespace PlayHarmoniez.Controllers
                 Songs = album.Songs
             };
 
-            // UploadImage(Task<string> UploadImage(name, file, containerName);
+            await UploadImage(albumModel.AlbumName, albumContainerName, albumModel.ImageFile);
 
             await _dataContext.Albums.AddAsync(albumModel);
 
@@ -62,7 +64,7 @@ namespace PlayHarmoniez.Controllers
             return RedirectToAction("AlbumList");
         }
 
-        public async Task<string> UploadImage(string name, IFormFile file, string containerName)
+        public async Task<string> UploadImage(string name, string containerName, IFormFile file)
         {
             var containerClient = _blobClient.GetBlobContainerClient(containerName);
             var blobClient = containerClient.GetBlobClient(name);
@@ -93,7 +95,6 @@ namespace PlayHarmoniez.Controllers
                 AlbumRelease = album.AlbumRelease,
                 ImageFile = album.ImageFile,
                 Songs = album.Songs,
-
             };
 
             return View(updatedAlbum);
