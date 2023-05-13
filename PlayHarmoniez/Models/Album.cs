@@ -10,8 +10,7 @@ namespace PlayHarmoniez.Models
         public string AlbumAuthor { get; set; }
         public DateTime AlbumRelease { get; set; }
         public string AlbumDescription { get; set; }
-        [NotMapped]
-        public IFormFile ImageFile { get; set; }
+        public string ImageFile { get; set; }
         public List<Song> Songs { get; set; }
     }
 }

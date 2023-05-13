@@ -12,10 +12,8 @@ namespace PlayHarmoniez.Models
         public string Description { get; set; }
         public int AlbumId { get; set; }
         public Album Album { get; set; }
-        [NotMapped]
-        public IFormFile SoundFile { get; set; }
-        [NotMapped] 
-        public IFormFile ImageFile { get; set; }
+        public string SoundFile { get; set; }
+        public string ImageFile { get; set; }
         public List<PlaylistSong> PlaylistSongs { get; set; }
         public List<LikedSong> LikedSong { get; set; }
     }

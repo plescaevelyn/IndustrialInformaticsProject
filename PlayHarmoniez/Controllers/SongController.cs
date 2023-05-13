@@ -49,9 +49,9 @@ namespace PlayHarmoniez.Controllers
             }
 
             [HttpPost]
-            public async Task<IActionResult> AddSong(Song song)
+            public async Task<IActionResult> AddSong(Song song, IFormFile soundFile, IFormFile imageFile)
             {
-                Song songModel = new Song()
+                Song songModel = new()
                 {
                     Id = song.Id,
                     Title = song.Title,
@@ -60,15 +60,12 @@ namespace PlayHarmoniez.Controllers
                     Description = song.Description,
                     AlbumId = song.AlbumId,
                     Album = song.Album,
-                    SoundFile = song.SoundFile,
-                    ImageFile = song.ImageFile,
                     PlaylistSongs = song.PlaylistSongs,
                     LikedSong = song.LikedSong
                 };
 
-                await UploadSong(songModel.Title, musicContainerName, songModel.SoundFile);
-
-                await UploadImage(songModel.Title, musicImageContainerName, songModel.ImageFile);
+                songModel.SoundFile = await UploadSong(songModel.Title, musicContainerName, soundFile);
+                songModel.ImageFile = await UploadImage(songModel.Title, musicImageContainerName, imageFile);
 
                 await _dataContext
                     .Songs
@@ -113,14 +110,14 @@ namespace PlayHarmoniez.Controllers
             }
 
             [HttpGet]
-            public async Task<IActionResult> UpdateSong(int Id)
+            public async Task<IActionResult> UpdateSong(int Id, IFormFile soundFile, IFormFile imageFile)
             {
                 Song song = await _dataContext.Songs.FirstOrDefaultAsync(e => e.Id == Id);
 
                 if (song == null)
                     return RedirectToAction("SongsList");
 
-                Song updatedSong = new Song()
+                Song updatedSong = new()
                 {
                     Title = song.Title,
                     Author = song.Author,
@@ -128,17 +125,18 @@ namespace PlayHarmoniez.Controllers
                     Description = song.Description,
                     AlbumId = song.AlbumId,
                     Album = song.Album,
-                    SoundFile = song.SoundFile,
-                    ImageFile = song.ImageFile,
                     PlaylistSongs = song.PlaylistSongs,
                     LikedSong = song.LikedSong,
                 };
+
+                updatedSong.SoundFile = await UploadSong(updatedSong.Title, musicContainerName, soundFile);
+                updatedSong.ImageFile = await UploadImage(updatedSong.Title, musicImageContainerName, imageFile);
 
                 return View(updatedSong);
             }
 
             [HttpPost]
-            public async Task<IActionResult> UpdateSong(Song song)
+            public async Task<IActionResult> UpdateSong(Song song, IFormFile imageFile, IFormFile soundFile)
             {
                 var songModel = await _dataContext.Songs.FindAsync(song.Id);
 
@@ -150,10 +148,11 @@ namespace PlayHarmoniez.Controllers
                     songModel.Description = song.Description;
                     songModel.AlbumId = song.AlbumId;
                     songModel.Album = song.Album;
-                    songModel.SoundFile = song.SoundFile;
-                    songModel.ImageFile = song.ImageFile;
                     songModel.PlaylistSongs = song.PlaylistSongs;
                     songModel.LikedSong = song.LikedSong;
+
+                    songModel.SoundFile = await UploadSong(songModel.Title, musicContainerName, soundFile);
+                    songModel.ImageFile = await UploadImage(songModel.Title, musicImageContainerName, imageFile);
 
                     await _dataContext.SaveChangesAsync();
                     return RedirectToAction("SongsList");
@@ -169,24 +168,25 @@ namespace PlayHarmoniez.Controllers
             }
 
             [HttpPost]
-            public async Task<IActionResult> DeleteSong(int id)
+            public async Task<IActionResult> DeleteSong(int id, string containerName)
             {
                 if (_dataContext.Songs == null)
                 {
                     return Problem("Entity set is null.");
                 }
-                var song = await _dataContext.Songs.FindAsync(id);
-                _dataContext.Songs.Remove(song);
-                await _dataContext.SaveChangesAsync();
-                return RedirectToAction("SongsList");
-            }
 
-            public async Task DeleteImage(string name, string containerName)
-            {
+                var song = await _dataContext.Songs.FindAsync(id);
+
                 var containerClient = _blobClient.GetBlobContainerClient(containerName);
-                var blobClient = containerClient.GetBlobClient(name);
+                var blobClient = containerClient.GetBlobClient(song.Title);
+
+                _dataContext.Songs.Remove(song);
 
                 await blobClient.DeleteIfExistsAsync();
+
+                await _dataContext.SaveChangesAsync();
+                
+                return RedirectToAction("SongsList");
             }
 
             public IActionResult GetSongById(int id)

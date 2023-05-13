@@ -13,27 +13,40 @@
 </form>
 <a href="AddSong">Would you like to add a song?</a>
 
-@foreach(var song in Model)
-{
-   
-    <div class="card text-white bg-info mb-3" style="max-width: 22rem;">
-        <div class="card-header"> </div>
-        <div class="card-body">
-            <h5 class="card-title">
-                <p class="card-text"> ImageFilePath : @song.ImageFile.ToString()</p><!--This is for testing-->
-                <img src=@song.ImageFile.ToString() style="width:40px;height:40px;">
-            </h5>
-            <h5 class="card-title">Title : @song.Title</h5>
-            <h5 class="card-title">Author : @song.Author</h5>
-	        <h5 class="card-title">Publish Date @song.PublishData.ToString("yyyy-mm-dd")</h5>
-            <p class="card-text"> Description : @song.Description</p>
-            <p class="card-text"> SoundFilePath : @song.SoundFile.ToString()</p><!--This is for testing-->
-            <audio controls>
-                <source src=@song.SoundFile.ToString() type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
-        </div>
-    </div>
-}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Publish Date</th>
+            <th scope="col">Description</th>
+            <th scope="col">Audio</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var song in Model)
+        {
+            <div class="card text-white bg-info mb-3" style="max-width: 22rem;">
+                <div class="card-header"> </div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <p class="card-text"> ImageFilePath : @song.ImageFile.ToString()</p><!--This is for testing-->
+                        <img src=@song.ImageFile.ToString() style="width:40px;height:40px;">
+                    </h5>
+                    <h5 class="card-title">Title : @song.Title</h5>
+                    <h5 class="card-title">Author : @song.Author</h5>
+                    <h5 class="card-title">Publish Date @song.PublishData.ToString("yyyy-mm-dd")</h5>
+                    <p class="card-text"> Description : @song.Description</p>
+                    <p class="card-text"> SoundFilePath : @song.SoundFile.ToString()</p><!--This is for testing-->
+                    <audio controls>
+                        <source src=@song.SoundFile.ToString() type="audio/mp3">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+            </div>
+        }
 
+    </tbody>
+</table>
 
