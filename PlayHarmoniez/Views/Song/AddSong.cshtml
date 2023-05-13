@@ -1,30 +1,37 @@
 ﻿@model Song
-
 <h1> Add Song </h1>
 <form method="post" action="AddSong" class="mt-5">
-	<div class="mb-3">
-		<label for="" class="form-label">Title</label>
-		<input type="text" class="form-control" asp-for="@Model.Title" />
-	</div>
-	<div class="mb-3">
-		<label for="" class="form-label">Author</label>
-		<input type="text" class="form-control" asp-for="@Model.Author" />
-	</div>
-	<div class="mb-3">
-		<label for="" class="form-label">Release date</label>
-		<input type="date" class="form-control" asp-for="@Model.PublishData" />
-	</div>
-	<div class="mb-3">
-		<label for="" class="form-label">Description</label>
-		<input type="text" class="form-control" asp-for="@Model.Description" />
-	</div>
-	<div class="mb-3">
-		<label for="" class="form-label">Image file</label>
-		<input type="text" class="form-control" asp-for="@Model.ImageFile" />
-	</div>
-	<div class="mb-3">
-		<label for="" class="form-label">Sound file</label>
-		<input type="text" class="form-control" asp-for="@Model.SoundFile" />
-	</div>
-	<button type="submit" class="btn btn-primary">Submit</button>
+    <div class="mb-3">
+        <label for="" class="form-label">Title</label>
+        <input type="text" class="form-control" asp-for="@Model.Title" />
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Author</label>
+        <input type="text" class="form-control" asp-for="@Model.Author" />
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Album Id</label>
+        <input type="text" class="form-control" asp-for="@Model.AlbumId" />
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Release date</label>
+        <input type="date" class="form-control" asp-for="@Model.PublishData" />
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Description</label>
+        <input type="text" class="form-control" asp-for="@Model.Description" />
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Image file</label>
+        <form action="/action_page.php">
+            <input type="file" class="form-control" asp-for="@Model.ImageFile" />
+        </form>
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Sound file</label>
+        <form action="/action_page.php">
+            <input type="file" class="form-control" asp-for="@Model.SoundFile" />
+        </form>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
