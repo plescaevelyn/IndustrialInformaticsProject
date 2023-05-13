@@ -1,28 +1,37 @@
 using Microsoft.EntityFrameworkCore;
 using PlayHarmoniez.App_Data;
-using Microsoft.AspNetCore.Identity;
-
+using Azure.Storage.Blobs;
+using Jose;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddControllersWithViews();
 
-// Session requirments
+// Session requirements
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
 {
-   // options.IdleTimeout = TimeSpan.FromSeconds(10);
+    // options.IdleTimeout = TimeSpan.FromSeconds(10);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
 
+// Blob Storage Settings
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
+var jwtSettings = builder.Configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
+
 
 builder.Services.AddDbContext<DataContext>(options =>
  options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-//builder.Services.AddScoped<ILogin,AuthenticateLogin>; cica tre folosit dar imi da eroare
 
+// Blob Storage Settings
+builder.Services.Configure<BlobStorageSettings>(builder.Configuration.GetSection(nameof(BlobStorageSettings)));
+var blobStorageSettings = builder.Configuration.GetSection(nameof(BlobStorageSettings)).Get<BlobStorageSettings>();
+
+// Blob Storage Service
+builder.Services.AddSingleton(blobService => new BlobServiceClient(blobStorageSettings.ConnectionString));
 
 var app = builder.Build();
 
@@ -36,16 +45,11 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-app.UseAuthentication();;
-
+app.UseAuthentication(); ;
 app.UseAuthorization();
-
 app.UseSession();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
 app.Run();
