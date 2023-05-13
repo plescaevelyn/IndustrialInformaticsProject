@@ -1,5 +1,3 @@
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PlayHarmoniez.App_Data;
@@ -12,15 +10,13 @@ namespace PlayHarmoniez.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly DataContext _dataContext;
-        private readonly BlobServiceClient _blobClient;
-        private readonly string albumContainerName;
-        public AlbumController(ILogger<HomeController> logger, DataContext dataContext, BlobServiceClient blobClient)
+
+        public AlbumController(ILogger<HomeController> logger, DataContext dataContext)
         {
             _logger = logger;
             _dataContext = dataContext;
-            _blobClient = blobClient;
-            albumContainerName = "albumcover";
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -28,13 +24,16 @@ namespace PlayHarmoniez.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        // Method to get all Albums
         [HttpGet]
         public async Task<IActionResult> AlbumList()
         {
+
             List<Album> albums = await _dataContext.Albums.ToListAsync();
             return View(albums);
-        }
 
+        }
+        // Method to add album 
         [HttpGet]
         public IActionResult AddAlbum()
         {
@@ -42,53 +41,11 @@ namespace PlayHarmoniez.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAlbum( Album album, IFormFile imageFile)
-        { 
-            Album albumModel = new()
+        public async Task<IActionResult> AddAlbum( Album album)
+        {
+            Album albumModel = new Album()
             {
                 Id = album.Id,
-                AlbumName = album.AlbumName,
-                AlbumAuthor = album.AlbumAuthor,
-                AlbumDescription = album.AlbumDescription,
-                AlbumRelease = album.AlbumRelease,
-                Songs = album.Songs
-            };
-
-            albumModel.ImageFile = await UploadImage(albumModel.AlbumName, albumContainerName, imageFile);
-
-            await _dataContext.Albums.AddAsync(albumModel);
-
-            await _dataContext.SaveChangesAsync();
-
-            return RedirectToAction("AlbumList");
-        }
-
-        public async Task<string> UploadImage(string name, string containerName, IFormFile file)
-        {
-            var containerClient = _blobClient.GetBlobContainerClient(containerName);
-            var blobClient = containerClient.GetBlobClient(name);
-
-            var httpHeaders = new BlobHttpHeaders()
-            {
-                ContentType = file.ContentType
-            };
-
-            await blobClient.UploadAsync(file.OpenReadStream(), httpHeaders);
-            var blobUrl = blobClient.Uri.AbsoluteUri;
-
-            return blobUrl;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> UpdateAlbum(int Id)
-        {
-            Album album = await _dataContext.Albums.FirstOrDefaultAsync(e=> e.Id ==Id );
-
-            if (album == null)
-                return RedirectToAction("AlbumList");
-
-            Album updatedAlbum = new()
-            {
                 AlbumName = album.AlbumName,
                 AlbumAuthor = album.AlbumAuthor,
                 AlbumDescription = album.AlbumDescription,
@@ -97,11 +54,35 @@ namespace PlayHarmoniez.Controllers
                 Songs = album.Songs
             };
 
+            await _dataContext.Albums.AddAsync(albumModel);
+
+            await _dataContext.SaveChangesAsync();
+
+            return RedirectToAction("AlbumList");
+        }
+        // Method to update album 
+        [HttpGet]
+        public async Task<IActionResult> UpdateAlbum(int Id)
+        {
+            Album album = await _dataContext.Albums.FirstOrDefaultAsync(e=> e.Id ==Id );
+
+            if (album == null)
+                return RedirectToAction("AlbumList");
+            Album updatedAlbum = new Album()
+            {
+                AlbumName = album.AlbumName,
+                AlbumAuthor = album.AlbumAuthor,
+                AlbumDescription = album.AlbumDescription,
+                AlbumRelease = album.AlbumRelease,
+                ImageFile = album.ImageFile,
+                Songs = album.Songs,
+
+            };
+
             return View(updatedAlbum);
         }
-
         [HttpPost]
-        public async Task<IActionResult> UpdateAlbum(Album updatedAlbum, IFormFile imageFile)
+        public async Task<IActionResult> UpdateAlbum(Album updatedAlbum)
         {
             var album = await _dataContext.Albums.FindAsync(updatedAlbum.Id);
 
@@ -111,19 +92,18 @@ namespace PlayHarmoniez.Controllers
                 album.AlbumAuthor = updatedAlbum.AlbumAuthor;
                 album.AlbumDescription = updatedAlbum.AlbumDescription;
                 album.AlbumRelease = updatedAlbum.AlbumRelease;
-                album.ImageFile = await UploadImage(album.AlbumName, albumContainerName, imageFile);
+                album.ImageFile = updatedAlbum.ImageFile;
                 album.Songs = updatedAlbum.Songs;
 
                 await _dataContext.SaveChangesAsync();
-
                 return RedirectToAction("AlbumList");
             }
 
             return RedirectToAction("AlbumList");
         }
-        
+        // Delete Album
         [HttpPost]
-        public async Task<IActionResult> DeleteAlbum(int id, string containerName)
+        public async Task<IActionResult> DeleteAlbum(int id)
         {
             if (_dataContext.Albums == null)
             {
@@ -131,26 +111,17 @@ namespace PlayHarmoniez.Controllers
             }
 
             var album = await _dataContext.Albums.FindAsync(id);
-
             _dataContext.Albums.Remove(album);
-
-            var containerClient = _blobClient.GetBlobContainerClient(containerName);
-            var blobClient = containerClient.GetBlobClient(album.AlbumName);
-
-            await blobClient.DeleteIfExistsAsync();
-
             await _dataContext.SaveChangesAsync();
-            
             return RedirectToAction("AlbumList");
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> GetAlbumByName(string name)
         {
 
             Album album = await _dataContext.Albums.FirstOrDefaultAsync(e => e.AlbumName == name);
-            
-            //TODO: adding an error window
+            //TO DO: adding an error window
             if (album == null)
                 return RedirectToAction("AddAlbum");
 

@@ -20,18 +20,11 @@
 	</div>
 	<div class="mb-3">
 		<label for="" class="form-label">Image file</label>
-		<!-- <input type="text" /> -->
-		<form action="/action_page.php">
-			<input type="file" class="form-control" asp-for="@Model.ImageFile" />
-			<input type="submit">
-		</form>
+		<input type="text" class="form-control" asp-for="@Model.ImageFile" />
 	</div>
 	<div class="mb-3">
 		<label for="" class="form-label">Sound file</label>
-		<form action="/action_page.php">
-			<input type="file" class="form-control" asp-for="@Model.SoundFile" />
-			<input type = "submit">
-		</form>
+		<input type="text" class="form-control" asp-for="@Model.SoundFile" />
 	</div>
 	<button type="submit" class="btn btn-primary">Submit</button>
 </form>
