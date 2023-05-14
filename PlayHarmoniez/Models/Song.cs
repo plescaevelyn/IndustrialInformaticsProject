@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PlayHarmoniez.Models
+﻿namespace PlayHarmoniez.Models
 {
     public class Song
     {
