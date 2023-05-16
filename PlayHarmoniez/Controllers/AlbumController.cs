@@ -1,5 +1,6 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs.Specialized;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PlayHarmoniez.App_Data;
@@ -54,10 +55,9 @@ namespace PlayHarmoniez.Controllers
                 AlbumAuthor = album.AlbumAuthor,
                 AlbumDescription = album.AlbumDescription,
                 AlbumRelease = album.AlbumRelease,
+                ImageFile = await UploadImage(album.AlbumName, albumContainerName, imageFile),
                 Songs = album.Songs
             };
-
-            albumModel.ImageFile = await UploadImage(albumModel.AlbumName, albumContainerName, imageFile);
 
             await _dataContext.Albums.AddAsync(albumModel);
 
@@ -66,17 +66,18 @@ namespace PlayHarmoniez.Controllers
             return RedirectToAction("AlbumList");
         }
 
-        public async Task<string> UploadImage(string name, string containerName, IFormFile file)
+        public async Task<string> UploadImage(string name, string containerName, IFormFile imageFile)
         {
             var containerClient = _blobClient.GetBlobContainerClient(containerName);
-            var blobClient = containerClient.GetBlobClient(name);
+
+            var blobClient = containerClient.GetBlockBlobClient(name);
 
             var httpHeaders = new BlobHttpHeaders()
             {
-                ContentType = file.ContentType
+                ContentType = imageFile.ContentType
             };
 
-            await blobClient.UploadAsync(file.OpenReadStream(), httpHeaders);
+            await blobClient.UploadAsync(imageFile.OpenReadStream(), httpHeaders);
             var blobUrl = blobClient.Uri.AbsoluteUri;
 
             return blobUrl;

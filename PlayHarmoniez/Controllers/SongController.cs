@@ -2,6 +2,7 @@ namespace PlayHarmoniez.Controllers
 {
     using Azure.Storage.Blobs;
     using Azure.Storage.Blobs.Models;
+    using Azure.Storage.Blobs.Specialized;
     using global::PlayHarmoniez.App_Data;
     using global::PlayHarmoniez.Models;
     using Microsoft.AspNetCore.Mvc;
@@ -74,33 +75,41 @@ namespace PlayHarmoniez.Controllers
                 return RedirectToAction("SongsList");
             }
 
-            public async Task<string> UploadSong(string name, string containerName, IFormFile file)
+            [HttpPost]
+            public async Task<string> UploadSong(string name, string containerName, IFormFile soundFile)
             {
                 var containerClient = _blobClient.GetBlobContainerClient(containerName);
-                var blobClient = containerClient.GetBlobClient(name);
+
+                // Create a new block blob
+                var blobClient = containerClient.GetBlockBlobClient(name); 
 
                 var httpHeaders = new BlobHttpHeaders()
                 {
-                    ContentType = file.ContentType
+                    ContentType = soundFile.ContentType
                 };
 
-                await blobClient.UploadAsync(file.OpenReadStream(), httpHeaders);
+                await blobClient.UploadAsync(soundFile.OpenReadStream(), httpHeaders);
                 var blobUrl = blobClient.Uri.AbsoluteUri;
 
                 return blobUrl;
             }
 
-            public async Task<string> UploadImage(string name, string containerName, IFormFile file)
+            [HttpPost]
+            public async Task<string> UploadImage(string name, string containerName, IFormFile imageFile)
             {
                 var containerClient = _blobClient.GetBlobContainerClient(containerName);
-                var blobClient = containerClient.GetBlobClient(name);
+
+                // Create a new block blob
+                var blobClient = containerClient.GetBlockBlobClient(name);
 
                 var httpHeaders = new BlobHttpHeaders()
                 {
-                    ContentType = file.ContentType
+                    ContentType = imageFile.ContentType
                 };
 
-                await blobClient.UploadAsync(file.OpenReadStream(), httpHeaders);
+                // Upload the file to the block blob
+                await blobClient.UploadAsync(imageFile.OpenReadStream(), httpHeaders);
+
                 var blobUrl = blobClient.Uri.AbsoluteUri;
 
                 return blobUrl;
@@ -214,7 +223,6 @@ namespace PlayHarmoniez.Controllers
 
                 return null;
             }
-
         }
     }
 }
