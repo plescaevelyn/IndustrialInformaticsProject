@@ -1,6 +1,7 @@
 ﻿@model Song
+
 <h1> Add Song </h1>
-<form method="post" action="AddSong" class="mt-5">
+<form method="post" action="AddSong" class="mt-5" enctype="multipart/form-data">
     <div class="mb-3">
         <label for="" class="form-label">Title</label>
         <input type="text" class="form-control" asp-for="@Model.Title" />
@@ -23,15 +24,11 @@
     </div>
     <div class="mb-3">
         <label for="" class="form-label">Image file</label>
-        <form action = "UploadImage">
-            <input type="file" class="form-control" asp-for="@Model.ImageFile" />
-        </form>
+        <input type="file" name="imageFile" class="form-control" asp-for="@Model.ImageFile" />
     </div>
     <div class="mb-3">
         <label for="" class="form-label">Sound file</label>
-        <form action="UploadSong">
-            <input type="file" class="form-control" asp-for="@Model.SoundFile" />
-        </form>
+        <input type="file" name = "soundFile" class="form-control" asp-for="@Model.SoundFile" />
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>

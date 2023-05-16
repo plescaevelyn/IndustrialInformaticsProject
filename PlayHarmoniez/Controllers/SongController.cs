@@ -2,6 +2,7 @@ namespace PlayHarmoniez.Controllers
 {
     using Azure.Storage.Blobs;
     using Azure.Storage.Blobs.Models;
+    using Azure.Storage.Blobs.Specialized;
     using global::PlayHarmoniez.App_Data;
     using global::PlayHarmoniez.Models;
     using Microsoft.AspNetCore.Mvc;
@@ -58,12 +59,11 @@ namespace PlayHarmoniez.Controllers
                     Description = song.Description,
                     AlbumId = song.AlbumId,
                     Album = song.Album,
+                    SoundFile = await UploadSong(song.Title, musicContainerName, soundFile),
+                    ImageFile = await UploadImage(song.Title, musicImageContainerName, imageFile),
                     PlaylistSongs = song.PlaylistSongs,
                     LikedSong = song.LikedSong
                 };
-
-                songModel.SoundFile = await UploadSong(songModel.Title, musicContainerName, soundFile);
-                songModel.ImageFile = await UploadImage(songModel.Title, musicImageContainerName, imageFile);
 
                 await _dataContext
                     .Songs
@@ -75,33 +75,41 @@ namespace PlayHarmoniez.Controllers
                 return RedirectToAction("SongsList");
             }
 
-            public async Task<string> UploadSong(string name, string containerName, IFormFile file)
+            [HttpPost]
+            public async Task<string> UploadSong(string name, string containerName, IFormFile soundFile)
             {
                 var containerClient = _blobClient.GetBlobContainerClient(containerName);
-                var blobClient = containerClient.GetBlobClient(name);
+
+                // Create a new block blob
+                var blobClient = containerClient.GetBlockBlobClient(name); 
 
                 var httpHeaders = new BlobHttpHeaders()
                 {
-                    ContentType = file.ContentType
+                    ContentType = soundFile.ContentType
                 };
 
-                await blobClient.UploadAsync(file.OpenReadStream(), httpHeaders);
+                await blobClient.UploadAsync(soundFile.OpenReadStream(), httpHeaders);
                 var blobUrl = blobClient.Uri.AbsoluteUri;
 
                 return blobUrl;
             }
 
-            public async Task<string> UploadImage(string name, string containerName, IFormFile file)
+            [HttpPost]
+            public async Task<string> UploadImage(string name, string containerName, IFormFile imageFile)
             {
                 var containerClient = _blobClient.GetBlobContainerClient(containerName);
-                var blobClient = containerClient.GetBlobClient(name);
+
+                // Create a new block blob
+                var blobClient = containerClient.GetBlockBlobClient(name);
 
                 var httpHeaders = new BlobHttpHeaders()
                 {
-                    ContentType = file.ContentType
+                    ContentType = imageFile.ContentType
                 };
 
-                await blobClient.UploadAsync(file.OpenReadStream(), httpHeaders);
+                // Upload the file to the block blob
+                await blobClient.UploadAsync(imageFile.OpenReadStream(), httpHeaders);
+
                 var blobUrl = blobClient.Uri.AbsoluteUri;
 
                 return blobUrl;
@@ -122,14 +130,11 @@ namespace PlayHarmoniez.Controllers
                     Description = song.Description,
                     AlbumId = song.AlbumId,
                     Album = song.Album,
-                    SoundFile = song.SoundFile,
-                    ImageFile = song.ImageFile,
+                    SoundFile = await UploadSong(song.Title, musicContainerName, soundFile),
+                    ImageFile = await UploadImage(song.Title, musicImageContainerName, imageFile),
                     PlaylistSongs = song.PlaylistSongs,
                     LikedSong = song.LikedSong,
                 };
-
-                updatedSong.SoundFile = await UploadSong(updatedSong.Title, musicContainerName, soundFile);
-                updatedSong.ImageFile = await UploadImage(updatedSong.Title, musicImageContainerName, imageFile);
 
                 return View(updatedSong);
             }
@@ -148,8 +153,8 @@ namespace PlayHarmoniez.Controllers
                     songModel.AlbumId = song.AlbumId;
                     songModel.Album = song.Album;songModel.PlaylistSongs = song.PlaylistSongs;
                     songModel.LikedSong = song.LikedSong;
-                    songModel.SoundFile = await UploadSong(songModel.Title, musicContainerName, soundFile);
-                    songModel.ImageFile = await UploadImage(songModel.Title, musicImageContainerName, imageFile);
+                    songModel.SoundFile = await UploadSong(song.Title, musicContainerName, soundFile);
+                    songModel.ImageFile = await UploadImage(song.Title, musicImageContainerName, imageFile);
 
                     await _dataContext.SaveChangesAsync();
 
@@ -175,19 +180,25 @@ namespace PlayHarmoniez.Controllers
 
                 var song = await _dataContext.Songs.FindAsync(id);
 
-                var containerClient = _blobClient.GetBlobContainerClient(musicContainerName);
-                var blobClient = containerClient.GetBlobClient(song.Title);
+                if (song != null)
+                {
+                    // deleting the sound file
+                    var containerClient = _blobClient.GetBlobContainerClient(musicContainerName);
+                    var blobClient = containerClient.GetBlobClient(song.Title);
 
-                await blobClient.DeleteIfExistsAsync();
+                    await blobClient.DeleteIfExistsAsync();
 
-                containerClient = _blobClient.GetBlobContainerClient(musicImageContainerName);
-                blobClient = containerClient.GetBlobClient(song.Title);
+                    containerClient = _blobClient.GetBlobContainerClient(musicImageContainerName);
 
-                await blobClient.DeleteIfExistsAsync();
+                    // deleting the song image file
+                    blobClient = containerClient.GetBlobClient(song.Title);
 
-                _dataContext.Songs.Remove(song);
+                    await blobClient.DeleteIfExistsAsync();
 
-                await _dataContext.SaveChangesAsync();
+                    _dataContext.Songs.Remove(song);
+
+                    await _dataContext.SaveChangesAsync();
+                }
 
                 return RedirectToAction("SongsList");
             }
@@ -209,9 +220,9 @@ namespace PlayHarmoniez.Controllers
                         ImageFile = songModel.ImageFile,
                     };
                 }
+
                 return null;
             }
-
         }
     }
 }
