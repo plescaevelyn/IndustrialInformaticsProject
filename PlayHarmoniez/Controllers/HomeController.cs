@@ -18,19 +18,21 @@ namespace PlayHarmoniez.Controllers
         }
 
         public IActionResult Index()
+        {            
+            return View();
+        }
+        public IActionResult HomePage_Admin() {
+            return View();
+        }
+        public IActionResult HomePage_User()
         {
-            var songs = _dataContext
-                .Songs
-                .Include(song => song.Album)
-                .ToList();
-            
+            return View();
+        }
+        public IActionResult LandingPage()
+        {
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

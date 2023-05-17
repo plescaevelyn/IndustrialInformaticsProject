@@ -1,5 +1,23 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿
+<html>
+<head>
+    <title>Register Page</title>
+    <link rel="stylesheet" href="~/css/Style.css" />
+</head>
+
+<body>
+    <div class="form">
+        <h1>Register</h1>
+        <div class="login-form "></div>
+        <form method="post" asp-action="AddUser">
+            <p><input type="text" class="form-control" name="username" value="" placeholder="Username or Email" required></p>
+            <p><input type="password" class="form-control" name="passcode" value="" placeholder="Password" required></p>
+            <p><input type="password" class="form-control" name="passcode2" value="" placeholder="Password Confirm" required></p>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <hr />
+            @((string)ViewContext.TempData["User_err"])
+            @((string)ViewContext.TempData["Pass_err"])
+        </form>
+    </div>
+</body>
+</html>

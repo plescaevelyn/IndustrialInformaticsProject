@@ -55,9 +55,7 @@ namespace PlayHarmoniez.Controllers
             };
 
             await _dataContext.Albums.AddAsync(albumModel);
-
             await _dataContext.SaveChangesAsync();
-
             return RedirectToAction("AlbumList");
         }
         // Method to update album 

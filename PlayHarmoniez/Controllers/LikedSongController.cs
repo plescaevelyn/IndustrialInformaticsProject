@@ -47,17 +47,19 @@ namespace PlayHarmoniez.Controllers
 
             return View("DeleteLikedSong");
         }
-        public IActionResult GetLikedSongs()
+        [HttpGet]
+        public async Task<IActionResult> LikedSongList()
         {
             int userId = (int)HttpContext.Session.GetInt32("UserId");
             var songs_id = _dataContext.LikedSongs.Where(e => e.UserId == userId).ToList();
             List<Song> songs = new List<Song>();
-            foreach(var likedSong in songs_id)
+            foreach (var likedSong in songs_id)
             {
                 var song = _songController.GetSongById(likedSong.SongId);
                 songs.Add((Song)song);
             }
             return View(songs);
+
         }
     }
 }
