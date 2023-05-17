@@ -4,6 +4,7 @@ namespace PlayHarmoniez.Controllers
     using global::PlayHarmoniez.Models;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Diagnostics;
 
     namespace PlayHarmoniez.Controllers
@@ -18,14 +19,6 @@ namespace PlayHarmoniez.Controllers
                 _logger = logger;
                 _dataContext = dataContext;
             }
-
-            // TODO: add index if needed
-
-            public IActionResult Privacy()
-            {
-                return View();
-            }
-
             [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
             public IActionResult Error()
             {
@@ -46,11 +39,13 @@ namespace PlayHarmoniez.Controllers
                 {
                     ViewBag.username = string.Format("Successfully logged-in", username);
                     HttpContext.Session.SetInt32("UserId", issuccess.Id);
-                    return RedirectToAction("Index", "Home");
+                    if (issuccess.AdminCheck == true)
+                        return RedirectToAction("HomePage_Admin", "Home");
+                    else return RedirectToAction("HomePage_User","Home");
                 }
                 else
                 {
-                    ViewBag.username = string.Format("Login Failed ", username);
+                    ViewBag.username = string.Format("Login Failed ");
                     return View();
                 }
             }
@@ -62,52 +57,39 @@ namespace PlayHarmoniez.Controllers
             }
 
             [HttpPost]
-            public async Task<IActionResult> AddUser(DataContext dataContext, User user)
+            public async Task<IActionResult> AddUser(String passcode,String passcode2,String username)
             {
-                User userModel = new User()
+
+                var userExists = await _dataContext.Users.FirstOrDefaultAsync(authUser => authUser.Username == username);
+                if (userExists != null)
                 {
-                    Id = user.Id,
-                    Username = user.Username,
-                    Password = user.Password,
-                    AdminCheck = user.AdminCheck,
-                    LikedSong = user.LikedSong
-                };
-
-                await dataContext
-                    .Users
-                    .AddAsync(user);
-
-                await dataContext
-                    .SaveChangesAsync();
-
-                return View("AddUser");
-            }
-
-            [HttpGet]
-            public IActionResult UpdateUser()
-            {
-                return View();
-            }
-
-            [HttpPost]
-            public async Task<IActionResult> UpdateUser(DataContext dataContext, User user)
-            {
-                var userModel = await _dataContext.Users.FindAsync(user.Id);
-
-                if (userModel != null)
-                {
-                    userModel.Username = user.Username;
-                    userModel.Password = user.Password;
-                    userModel.AdminCheck = user.AdminCheck;
-                    userModel.LikedSong = user.LikedSong;
-
-                    await dataContext.SaveChangesAsync();
-                    return RedirectToAction("UserList");
+                    TempData["User_err"] = "User already exists";
+                    return RedirectToAction("AddUser","User");
                 }
+                else
+                {
+                    if (passcode == passcode2)
+                    {
+                        User userModel = new User()
+                        {
+                            Username = username,
+                            Password = passcode,
+                            AdminCheck = false,
+                           
+                        };
 
-                return RedirectToAction("UserList");
+                        await _dataContext.Users.AddAsync(userModel);
+                        await _dataContext.SaveChangesAsync();
+                        return RedirectToAction("Login", "User");
+
+                    }
+                    else {
+                        TempData["Pass_err"] = "Passwords do not match";
+                        return RedirectToAction("AddUser", "User");
+                    }
+                    
+                }
             }
-
             [HttpGet]
             public IActionResult DeleteUser()
             {
