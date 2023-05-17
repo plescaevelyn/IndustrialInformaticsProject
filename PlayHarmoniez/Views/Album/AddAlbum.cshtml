@@ -1,7 +1,7 @@
-﻿@model Album
+@model Album
 
 <h1> Add Album </h1>
-<form method="post" action="AddAlbum" class="mt-5">
+<form method="post" action="AddAlbum" class="mt-5" enctype="multipart/form-data">
 	<div class = "mb-3">
 		<label for="" class="form-label">Name</label>
 		<input type="text" class="form-control" asp-for="@Model.AlbumName"/>
@@ -20,7 +20,7 @@
 	</div>
 	<div class="mb-3">
 		<label for="" class="form-label">Image file</label>
-		<input type="text" class="form-control" asp-for="@Model.ImageFile" />
+		<input type="file" name = "imageFile" class="form-control" asp-for="@Model.ImageFile" />
 	</div>
 	<button type="submit" class="btn btn-primary">Submit</button>
 </form>

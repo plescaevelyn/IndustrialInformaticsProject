@@ -1,4 +1,4 @@
-﻿namespace PlayHarmoniez.Controllers
+namespace PlayHarmoniez.Controllers
 {
     using global::PlayHarmoniez.App_Data;
     using global::PlayHarmoniez.Models;
