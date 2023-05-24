@@ -17,21 +17,19 @@ namespace PlayHarmoniez.Controllers
             _dataContext = dataContext;
         }
 
-        // TODO: modify this
-        public IActionResult Index()
-        {
-            var songs = _dataContext
-                .Songs
-                .Include(song => song.PlaylistSongs)
-                .ToList();
-
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PlaylistList()
+        {
+
+            List<Playlist> playlists = await _dataContext.Playlist.ToListAsync();
+            return View(playlists);
         }
 
         [HttpGet]
@@ -41,45 +39,60 @@ namespace PlayHarmoniez.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPlaylist(DataContext dataContext, Playlist playlist)
+        public async Task<IActionResult> AddPlaylist( Playlist playlist)
         {
             Playlist playlist1 = new Playlist()
             {
                 Id = playlist.Id,
                 UserId = playlist.UserId,
+                Name = playlist.Name,
+                Description = playlist.Description,
                 PlaylistSongs = playlist.PlaylistSongs,
-                User = playlist.User,
             };
 
-            await dataContext
+            await _dataContext
                 .Playlist
                 .AddAsync(playlist1);
 
-            await dataContext
+            await _dataContext
                 .SaveChangesAsync();
 
-            return View("AddPlaylist");
+            return View("PlaylistList");
         }
 
         [HttpGet]
-        public IActionResult UpdatePlaylist()
+        public async Task <IActionResult> UpdatePlaylist(int Id)
         {
-            return View();
+
+            Playlist newPlaylist = await _dataContext.Playlist.FirstOrDefaultAsync(e => e.Id == Id);
+            if (newPlaylist == null)
+                return RedirectToAction("GetPlaylistById");
+            Playlist updatedPlaylist = new()
+            {
+                Id = newPlaylist.Id,
+                UserId = newPlaylist.UserId,
+                Description= newPlaylist.Description,
+                Name = newPlaylist.Name,
+
+            };
+            return View(updatedPlaylist);
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdatePlaylist(DataContext dataContext, Playlist playlist)
+        public async Task<IActionResult> UpdatePlaylist(Playlist playlist)
         {
             var playlistModel = await _dataContext.Playlist.FindAsync(playlist.Id);
 
             if (playlistModel != null)
             {
-                playlistModel.PlaylistId = playlist.PlaylistId;
+
                 playlistModel.UserId = playlist.UserId;
                 playlistModel.PlaylistSongs = playlist.PlaylistSongs;
                 playlistModel.User = playlist.User;
+                playlistModel.Name = playlist.Name;
+                playlistModel.Description = playlist.Description;
 
-                await dataContext.SaveChangesAsync();
+                await _dataContext.SaveChangesAsync();
                 return RedirectToAction("PlaylistList");
             }
 
@@ -93,27 +106,18 @@ namespace PlayHarmoniez.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeletePlaylist(DataContext dataContext, Playlist playlist)
+        public async Task<IActionResult> DeletePlaylist(int Id)
         {
-            var playlistModel = await _dataContext.LikedSongs.FindAsync(playlist.Id);
+            var playlistModel = await _dataContext.Playlist.FindAsync(Id);
 
             if (playlistModel != null)
             {
-                dataContext.Remove(playlist);
+                _dataContext.Remove(playlistModel);
 
-                await dataContext.SaveChangesAsync();
+                await _dataContext.SaveChangesAsync();
             }
-
-            return View("DeletePlaylist");
+            return RedirectToAction("PlaylistList");
         }
 
-        public IActionResult GetPlaylistById(DataContext dataContext, int id)
-        {
-            _dataContext
-                .Playlist
-                .SingleOrDefault(playlist => playlist.Id == id);
-
-            return View();
-        }
     }
 }

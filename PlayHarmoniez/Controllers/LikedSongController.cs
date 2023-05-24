@@ -28,6 +28,21 @@ namespace PlayHarmoniez.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        //dc nu meriiii
+        public async Task<IActionResult> AddLikedSong(int Id) {
+
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            LikedSong likedsong = new()
+            {
+                SongId = Id,
+                UserId = (int)userId,
+
+            };
+            await _dataContext.LikedSongs.AddAsync(likedsong);
+            await _dataContext.SaveChangesAsync();
+            return RedirectToAction("GetLikedSongs");
+        }
+
         public async Task<IActionResult> DeleteLikedSong(int Id)
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
@@ -36,10 +51,6 @@ namespace PlayHarmoniez.Controllers
             {
                 return Problem("Entity set is null.");
             }
-            
-            //var likedSong = await _dataContext.LikedSongs.FindAsync(Id,userId);
-            //_dataContext.LikedSongs.Remove(likedSong);
-            //await _dataContext.SaveChangesAsync();
             
             var songs_id = _dataContext.LikedSongs.Where(e => e.UserId == userId).ToList();
             
