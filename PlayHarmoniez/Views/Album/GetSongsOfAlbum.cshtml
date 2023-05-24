@@ -1,0 +1,25 @@
+﻿@model List<PlayHarmoniez.Models.Song>
+
+<!-- Sidebar/menu -->
+@await Html.PartialAsync("~/Views/Shared/_Navbar_Admin.cshtml");
+@foreach (var song in Model)
+{
+    <div class="card text-white bg-dark mb-3" style="max-width: 75rem; max-height: 20rem;margin-left:20%">
+        <div class="song-container">
+            <img vlass="song-cover" src=@song.ImageFile.ToString() style="width:150px;height:150px;">
+            <div class="song-info">
+                <h3 class="song-title">Title:@song.Title</h3>
+                <p class="song-author">Author:@song.Author</p>
+                <p class="song-author">Published Data:@song.PublishData.ToString("yyyy-mm-dd")</p>
+                <p class="song-author">Description:@song.Description</p>
+            </div>
+            <audio class="song-audio" controls>
+                <source src=@song.SoundFile.ToString() type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <div class="btn btn-primary btn-lg">
+                <a href="~/Song/UpdateSong/@song.Id">Modify</a>
+            </div>
+        </div>
+    </div>
+}

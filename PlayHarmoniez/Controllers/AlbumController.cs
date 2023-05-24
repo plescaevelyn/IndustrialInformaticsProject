@@ -4,8 +4,10 @@ using Azure.Storage.Blobs.Specialized;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PlayHarmoniez.App_Data;
+using PlayHarmoniez.Controllers.PlayHarmoniez.Controllers;
 using PlayHarmoniez.Models;
 using System.Diagnostics;
+using PlayHarmoniez.Controllers.PlayHarmoniez.Controllers;
 
 namespace PlayHarmoniez.Controllers
 {
@@ -151,6 +153,22 @@ namespace PlayHarmoniez.Controllers
                 return RedirectToAction("AddAlbum");
 
             return View(album);
+        }
+        public IActionResult GetSongsOfAlbum(int id)
+        {
+            var songs_id = _dataContext.Songs.Where(e => e.AlbumId == id).ToList();
+            List<Song> songs = new List<Song>();
+            SongController songController = new SongController(_logger, _dataContext, _blobClient);
+            foreach (var albumSong in songs_id)
+            {
+                var song = songController.GetSongById(albumSong.Id);
+                if (song != null)
+                {
+                    songs.Add(song);
+                }
+            }
+            return View(songs);
+
         }
 
     }
