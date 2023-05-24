@@ -40,6 +40,13 @@ namespace PlayHarmoniez.Controllers
                 List<Song>songs = await _dataContext.Songs.ToListAsync();
                 return View(songs);
             }
+            [HttpGet]
+            public async Task<IActionResult> SongsList_User()
+            {
+
+                List<Song> songs = await _dataContext.Songs.ToListAsync();
+                return View(songs);
+            }
 
             [HttpGet]
             public IActionResult AddSong()
