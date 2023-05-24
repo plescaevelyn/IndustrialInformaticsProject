@@ -1,0 +1,23 @@
+﻿@model List<PlayHarmoniez.Models.Playlist>
+
+<!-- Sidebar/menu -->
+@await Html.PartialAsync("~/Views/Shared/_Navbar_User.cshtml");
+@foreach (var playlist in Model)
+{
+    <div class="card text-white bg-dark mb-3" style="max-width: 75rem; max-height: 20rem;margin-left:20%">
+        <div class="card-header">@playlist.Name</div>
+        <div class="card-body">
+            <p class="card-text"> Description : @playlist.Description</p>
+        </div>
+        <div style="display: inline-block">
+            
+            <a class="circle-button-link" href="@Url.Action("AddPlaylistSong","Playlist",new {playlistId=playlist.Id,songId=((int)ViewContext.TempData["songId"])})">
+                <img src="https://cdn1.iconfinder.com/data/icons/bold-purple-part1/32/88_Document_Check_Page_Downloaded_Data_File_Text-512.png"
+                     alt="Select Playlist"
+                     title="Select Playlist">
+            </a>
+        </div>
+    </div>
+}
+
+

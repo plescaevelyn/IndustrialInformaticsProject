@@ -209,8 +209,31 @@ namespace PlayHarmoniez.Controllers
 
                 return RedirectToAction("SongsList");
             }
+            public async Task<IActionResult> PassSongId(int songId) {
 
-            public Song? GetSongById(int id)
+                Song song = await _dataContext.Songs.FirstOrDefaultAsync(e => e.Id == songId);
+
+                if (song == null)
+                    return RedirectToAction("SongsList_User");
+                else
+                return RedirectToAction("Playlist_choose","Playlist",new {Id=songId});
+            }
+            public async Task<IActionResult> RemoveFromPlaylist(int songId,int playlistId)
+            {
+                var songs_id = _dataContext.PlaylistSongs.Where(e => e.SongId == songId).ToList();
+
+                foreach (var playlistSong in songs_id)
+                {
+                    if (playlistSong.PlaylistId == playlistId)
+                        _dataContext.PlaylistSongs.Remove(playlistSong);
+                    await _dataContext.SaveChangesAsync();
+                }
+                TempData["playlistId"] = playlistId;
+                int plid = playlistId;
+                return RedirectToAction("GetPlaylistSongs", "Playlist", new {Id=playlistId});
+            }
+
+                public Song? GetSongById(int id)
             {
                 var songModel = _dataContext.Songs.Find(id);
                 if (songModel != null)

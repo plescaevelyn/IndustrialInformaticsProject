@@ -6,6 +6,7 @@ namespace PlayHarmoniez.Controllers
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Diagnostics;
+    using System.Runtime.InteropServices;
 
     namespace PlayHarmoniez.Controllers
     {
@@ -90,6 +91,19 @@ namespace PlayHarmoniez.Controllers
                     
                 }
             }
+            [HttpPost]
+            public async Task<IActionResult> UpdateUser(User user)
+            {
+                var userModel = await _dataContext.Users.FindAsync(user.Id);
+                if (userModel != null)
+                {
+                    userModel.Username = user.Username;
+                    userModel.Password = user.Password;
+                    userModel.AdminCheck = false;
+                    await _dataContext.SaveChangesAsync();
+                }
+                return RedirectToAction("GetUserById", "User");
+            }
             [HttpGet]
             public IActionResult DeleteUser()
             {
@@ -97,27 +111,25 @@ namespace PlayHarmoniez.Controllers
             }
 
             [HttpPost]
-            public async Task<IActionResult> DeleteUser(DataContext dataContext, User user)
+            public async Task<IActionResult> DeleteUser(int id)
             {
-                var userModel = await _dataContext.Users.FindAsync(user.Id);
+                var user = await _dataContext.Users.FindAsync(id);
 
-                if (userModel != null)
+                if (user != null)
                 {
-                    dataContext.Remove(user);
-
-                    await dataContext.SaveChangesAsync();
+                    _dataContext.Remove(user);
+                    await _dataContext.SaveChangesAsync();
                 }
-
-                return View("DeleteUser");
+                return RedirectToAction("Login", "User");
             }
 
-            public IActionResult GetUsersById(DataContext dataContext, int id)
+            public IActionResult GetUserById()
             {
-                _dataContext
-                    .Users
-                    .SingleOrDefault(user => user.Id == id);
+                int? userId = HttpContext.Session.GetInt32("UserId");
 
-                return View();
+                User user = _dataContext.Users.Find(userId);
+                return View(user);
+
             }
         }
     }

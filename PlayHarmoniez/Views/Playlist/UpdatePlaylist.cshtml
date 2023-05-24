@@ -1,0 +1,17 @@
+﻿@model Playlist
+<!-- Sidebar/menu -->
+@await Html.PartialAsync("~/Views/Shared/_Navbar_User.cshtml");
+<div style="margin-left:20%">
+    <h1> Update Playlist </h1>
+    <form method="post" action="AddPlaylist" class="mt-5" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="" class="form-label">Name</label>
+            <input type="text" class="form-control" asp-for="@Model.Name" />
+        </div>
+        <div class="mb-3">
+            <label for="" class="form-label">Description</label>
+            <input type="text" class="form-control" asp-for="@Model.Description" />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

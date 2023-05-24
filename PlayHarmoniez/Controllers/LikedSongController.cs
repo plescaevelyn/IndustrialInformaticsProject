@@ -28,7 +28,6 @@ namespace PlayHarmoniez.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        //dc nu meriiii
         public async Task<IActionResult> AddLikedSong(int Id) {
 
             int? userId = HttpContext.Session.GetInt32("UserId");

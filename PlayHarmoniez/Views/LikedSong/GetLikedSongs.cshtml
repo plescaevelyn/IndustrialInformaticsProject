@@ -18,7 +18,7 @@
                 <source src=@song.SoundFile.ToString() type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
-            <a class="circle-button-link" href="#">
+            <a class="circle-button-link" href="@Url.Action("PassSongId","Song",new{songId=@song.Id})">
                 <img src="https://cdn4.iconfinder.com/data/icons/media-buttons/512/add-1024.png"
                      alt="Add to Playlist"
                      title="Add to Playlist">

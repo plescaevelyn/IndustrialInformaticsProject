@@ -1,5 +1,7 @@
 ﻿@model Album
-
+<!-- Sidebar/menu -->
+@await Html.PartialAsync("~/Views/Shared/_Navbar_Admin.cshtml");
+<div style="margin-left:20%">
 <h1> Modify Album </h1>
 <form method="post" action="UpdateAlbum" class="mt-5" enctype="multipart/form-data">
 	<div class="mb-3">
@@ -29,3 +31,4 @@
 	<button type="submit" class="btn btn-primary">Submit</button>
 	<button type="submit" class="btn btn-danger" asp-asp-controller="Album" asp-action="DeleteAlbum">Delete</button>
 </form>
+</div>
