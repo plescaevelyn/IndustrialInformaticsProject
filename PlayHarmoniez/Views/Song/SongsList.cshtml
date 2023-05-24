@@ -5,21 +5,23 @@
 <a href="AddSong" class="btn btn-primary btn-lg" style="margin-left:20%;margin-bottom:40px;margin-top:40px">Would you like to add a song?</a>
 @foreach(var song in Model)
 {
-    <div class="card text-white bg-info mb-3" style="max-width: 22rem;margin-left:20%">
-        <div class="card-header"> </div>
-        <div class="card-body">
-            <h5 class="card-title">
-                <img src=@song.ImageFile.ToString() style="width:200px;height:200px;">
-            </h5>
-            <h5 class="card-title">Title : @song.Title</h5>
-            <h5 class="card-title">Author : @song.Author</h5>
-	        <h5 class="card-title">Publish Date @song.PublishData.ToString("yyyy-mm-dd")</h5>
-            <p class="card-text"> Description : @song.Description</p>
-            <audio controls>
+    <div class="card text-white bg-dark mb-3" style="max-width: 75rem; max-height: 20rem;margin-left:20%">
+        <div class="song-container">
+            <img vlass="song-cover" src=@song.ImageFile.ToString() style="width:150px;height:150px;">
+            <div class="song-info">
+                <h3 class="song-title">Title:@song.Title</h3>
+                <p class="song-author">Author:@song.Author</p>
+                <p class="song-author">Published Data:@song.PublishData.ToString("yyyy-mm-dd")</p>
+                <p class="song-author">Description:@song.Description</p>
+            </div>
+            <audio class="song-audio" controls>
                 <source src=@song.SoundFile.ToString() type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
-        </div>
+                <div class="btn btn-primary btn-lg">
+                    <a href="UpdateSong/@song.Id" >Modify</a>
+                </div>
+            </div>       
     </div>
 }
 

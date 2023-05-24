@@ -1,5 +1,42 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model Song
+<!-- Sidebar/menu -->
+@await Html.PartialAsync("~/Views/Shared/_Navbar_Admin.cshtml");
+<div style="margin-left:20%;margin-bottom:50px">
+<h1> Modify Song </h1>
+    <form method="post" action="UpdateSong" class="mt-5" enctype="multipart/form-data">
+	<div class="mb-3">
+		<label for="" class="form-label">Id</label>
+		<input type="text" class="form-control" asp-for="@Model.Id" readonly />
+	</div>
+    <div class="mb-3">
+        <label for="" class="form-label">Title</label>
+        <input type="text" class="form-control" asp-for="@Model.Title" />
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Author</label>
+        <input type="text" class="form-control" asp-for="@Model.Author" />
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Album Id</label>
+        <input type="text" class="form-control" asp-for="@Model.AlbumId" />
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Release date</label>
+        <input type="date" class="form-control" asp-for="@Model.PublishData" />
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Description</label>
+        <input type="text" class="form-control" asp-for="@Model.Description" />
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Image file</label>
+        <input type="file" name="imageFile" class="form-control" asp-for="@Model.ImageFile" />
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Sound file</label>
+        <input type="file" name="soundFile" class="form-control" asp-for="@Model.SoundFile" />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+	<button type="submit" class="btn btn-danger" asp-asp-controller="Song" asp-action="DeleteSong">Delete</button>
+</form>
+</div>
