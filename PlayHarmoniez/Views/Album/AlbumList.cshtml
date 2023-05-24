@@ -1,6 +1,8 @@
 ﻿@model List<PlayHarmoniez.Models.Album>
-
-<a href="AddAlbum">Would you like to add an album?</a>
+<!-- Sidebar/menu -->
+@await Html.PartialAsync("~/Views/Shared/_Navbar_Admin.cshtml");
+<div style="margin-left:20%">
+    <a href="AddAlbum" class="btn btn-primary btn-lg" style="margin-left:20%;margin-bottom:40px;margin-top:40px">Would you like to add an album?</a>
 <table class="table table-hover">
     <thead>
         <tr>
@@ -25,4 +27,5 @@
             </tr>
         }
     </tbody>
-</table>
+    </table>
+</div>

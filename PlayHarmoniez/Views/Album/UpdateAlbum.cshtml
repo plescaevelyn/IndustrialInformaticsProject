@@ -1,7 +1,7 @@
 ﻿@model Album
 
 <h1> Modify Album </h1>
-<form method="post" action="UpdateAlbum" class="mt-5">
+<form method="post" action="UpdateAlbum" class="mt-5" enctype="multipart/form-data">
 	<div class="mb-3">
 		<label for="" class="form-label">Id</label>
 		<input type="text" class="form-control" asp-for="@Model.Id" readonly />
@@ -24,7 +24,7 @@
 	</div>
 	<div class="mb-3">
 		<label for="" class="form-label">Image file</label>
-		<input type="text" class="form-control" asp-for="@Model.ImageFile" />
+		<input type="file" name="imageFile" class="form-control" asp-for="@Model.ImageFile" />
 	</div>
 	<button type="submit" class="btn btn-primary">Submit</button>
 	<button type="submit" class="btn btn-danger" asp-asp-controller="Album" asp-action="DeleteAlbum">Delete</button>

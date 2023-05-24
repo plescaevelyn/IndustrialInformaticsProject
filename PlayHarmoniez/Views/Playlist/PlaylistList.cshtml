@@ -1,12 +1,8 @@
 ﻿@model List<PlayHarmoniez.Models.Playlist>
-@{
-    ViewData["Title"] = "PlaylistList";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
 
 <!-- Sidebar/menu -->
 @await Html.PartialAsync("~/Views/Shared/_Navbar_User.cshtml");
-
+<a href="AddPlaylist" class="btn btn-primary btn-lg" style="margin-left:20%;margin-bottom:40px;margin-top:40px">Add playlist</a>
 
 @foreach(var playlist in Model)
 {
@@ -15,10 +11,26 @@
         <div class="card-body">
             <p class="card-text"> Description : @playlist.Description</p>
         </div>
+        <div style="display: inline-block">
+        <!--Here is the button to modify playlist-->
+        <a class="circle-button-link" href="">
+            <img src="https://cdn4.iconfinder.com/data/icons/business-and-office-circle-flat-shadow-vol-5/100/pencil__writing__color__edit-1024.png" 
+            alt="Modify Playlist"
+            title="Modify Playlist">
+        </a>
         <!--Here there needs to be the link for songs inside the called playlist that passes playlist id-->
         <a class="circle-button-link" href="">
-            <img src="https://static.vecteezy.com/system/resources/previews/000/379/146/original/list-vector-icon.jpg">
+            <img src="https://static.vecteezy.com/system/resources/previews/000/379/146/original/list-vector-icon.jpg"
+            alt="see songs"
+            title="see songs">
         </a>
+        <!--Button to delete playlist-->
+        <a class="circle-button-link" href="">
+                <img src="https://cdn4.iconfinder.com/data/icons/bold-purple/32/Trash_Delete_Replace_Block_Disabled-1024.png" 
+                alt="Delete playlist"
+                title="Delete playlist">
+        </a>
+        </div>
      </div>
 }
 

@@ -132,12 +132,12 @@ body {
         max-height: 50px;
         border-radius: 50%;
     }
-.song-container {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    border-radius: 8px;
-}
+        .song-container {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-radius: 8px;
+        }
 
 .song-cover {
     width: 100px;

@@ -1,5 +1,8 @@
 ﻿@model Song
 
+<!-- Sidebar/menu -->
+@await Html.PartialAsync("~/Views/Shared/_Navbar_Admin.cshtml");
+<div style="margin-left:20%">
 <h1> Add Song </h1>
 <form method="post" action="AddSong" class="mt-5" enctype="multipart/form-data">
     <div class="mb-3">
@@ -31,4 +34,5 @@
         <input type="file" name = "soundFile" class="form-control" asp-for="@Model.SoundFile" />
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+    </form>
+</div>

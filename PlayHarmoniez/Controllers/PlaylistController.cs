@@ -29,7 +29,7 @@ namespace PlayHarmoniez.Controllers
         {
 
             List<Playlist> playlists = await _dataContext.Playlist.ToListAsync();
-            return View(playlists);
+            return View("PlaylistList",playlists);
         }
 
         [HttpGet]
@@ -41,10 +41,11 @@ namespace PlayHarmoniez.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPlaylist( Playlist playlist)
         {
+            int? userId = HttpContext.Session.GetInt32("UserId");
             Playlist playlist1 = new Playlist()
             {
                 Id = playlist.Id,
-                UserId = playlist.UserId,
+                UserId = (int)userId,
                 Name = playlist.Name,
                 Description = playlist.Description,
                 PlaylistSongs = playlist.PlaylistSongs,
@@ -57,7 +58,7 @@ namespace PlayHarmoniez.Controllers
             await _dataContext
                 .SaveChangesAsync();
 
-            return View("PlaylistList");
+            return RedirectToAction("PlaylistList");
         }
 
         [HttpGet]

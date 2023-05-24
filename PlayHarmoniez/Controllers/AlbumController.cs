@@ -33,10 +33,8 @@ namespace PlayHarmoniez.Controllers
         [HttpGet]
         public async Task<IActionResult> AlbumList()
         {
-
             List<Album> albums = await _dataContext.Albums.ToListAsync();
             return View(albums);
-
         }
         
         [HttpGet]

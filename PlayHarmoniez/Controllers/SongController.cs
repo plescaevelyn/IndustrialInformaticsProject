@@ -123,7 +123,7 @@ namespace PlayHarmoniez.Controllers
             }
 
             [HttpGet]
-            public async Task<IActionResult> UpdateSong(int Id, IFormFile soundFile, IFormFile imageFile)
+            public async Task<IActionResult> UpdateSong(int Id)
             {
                 Song song = await _dataContext.Songs.FirstOrDefaultAsync(e => e.Id == Id);
 
@@ -137,8 +137,8 @@ namespace PlayHarmoniez.Controllers
                     Description = song.Description,
                     AlbumId = song.AlbumId,
                     Album = song.Album,
-                    SoundFile = await UploadSong(song.Title, musicContainerName, soundFile),
-                    ImageFile = await UploadImage(song.Title, musicImageContainerName, imageFile),
+                    SoundFile =song.SoundFile,
+                    ImageFile = song.ImageFile,
                     PlaylistSongs = song.PlaylistSongs,
                     LikedSong = song.LikedSong,
                 };
@@ -227,7 +227,6 @@ namespace PlayHarmoniez.Controllers
                         ImageFile = songModel.ImageFile,
                     };
                 }
-
                 return null;
             }
         }
