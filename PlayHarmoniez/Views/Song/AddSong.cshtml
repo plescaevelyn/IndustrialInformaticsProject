@@ -1,5 +1,9 @@
 ﻿@model Song
 
+@{
+    SelectList itemList = ViewBag.ItemList;
+}
+
 <!-- Sidebar/menu -->
 @await Html.PartialAsync("~/Views/Shared/_Navbar_Admin.cshtml");
 <div style="margin-left:20%">
@@ -14,8 +18,8 @@
         <input type="text" class="form-control" asp-for="@Model.Author" />
     </div>
     <div class="mb-3">
-        <label for="" class="form-label">Album Id</label>
-        <input type="text" class="form-control" asp-for="@Model.AlbumId" />
+            <label for="" class="form-label">Album (if it is not on the list, please go to Albums and create one)</label>
+            @Html.DropDownListFor(model => model.AlbumId, itemList, "Select an item")
     </div>
     <div class="mb-3">
         <label for="" class="form-label">Release date</label>

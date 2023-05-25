@@ -2,15 +2,14 @@
 <!-- Sidebar/menu -->
 @await Html.PartialAsync("~/Views/Shared/_Navbar_User.cshtml");
 <div style="margin-left:20%;margin-bottom:50px">
-    <h1 style="text-align: center;"> Account </h1>
-    <div class="account-image">
+    <div class="account-image image-container">
         <img src="https://cdn.openart.ai/uploads/image_random_qqTK0f6D_1666553058859_1024.webp" alt="Capybara" style="max-width:100%;
              max-height:100%;">
     </div>
+    <h1 style="text-align: center;"> Account </h1>
     <form method="post" action="UpdateUser" class="mt-5" enctype="multipart/form-data">
         <div class="mb-3">
-            <label for="" class="form-label">Id</label>
-            <input type="text" class="form-control" asp-for="@Model.Id" readonly />
+            <input type="hidden" class="form-control" asp-for="@Model.Id" readonly />
         </div>
         <div class="mb-3">
             <label for="" class="form-label">Username</label>
@@ -24,5 +23,7 @@
         <button type="submit" class="btn btn-primary">Update</button>
         <button type="submit" class="btn btn-danger" asp-asp-controller="User" asp-action="DeleteUser">Delete your account</button>
         </div>
+        <hr />
+        @((string)ViewContext.TempData["User_mody"])
     </form>
 </div>

@@ -38,7 +38,13 @@ namespace PlayHarmoniez.Controllers
             List<Album> albums = await _dataContext.Albums.ToListAsync();
             return View(albums);
         }
-        
+        [HttpGet]
+        public async Task<IActionResult> AlbumList_User()
+        {
+            List<Album> albums = await _dataContext.Albums.ToListAsync();
+            return View(albums);
+        }
+
         [HttpGet]
         public IActionResult AddAlbum()
         {
@@ -154,8 +160,43 @@ namespace PlayHarmoniez.Controllers
 
             return View(album);
         }
-        public IActionResult GetSongsOfAlbum(int id)
+        public async Task<IActionResult> GetSongsOfAlbum(int id)
         {
+
+            var album = await _dataContext.Albums.FindAsync(id);
+
+            TempData["albumCover"] = album.ImageFile;
+            TempData["albumName"] = album.AlbumName;
+            TempData["albumAuthor"] = album.AlbumAuthor;
+            TempData["albumRelease"] = album.AlbumRelease;
+            TempData["albumDesc"] = album.AlbumDescription;
+
+
+            var songs_id = _dataContext.Songs.Where(e => e.AlbumId == id).ToList();
+            List<Song> songs = new List<Song>();
+            SongController songController = new SongController(_logger, _dataContext, _blobClient);
+            foreach (var albumSong in songs_id)
+            {
+                var song = songController.GetSongById(albumSong.Id);
+                if (song != null)
+                {
+                    songs.Add(song);
+                }
+            }
+            return View(songs);
+
+        }
+        public async Task<IActionResult> GetSongsOfAlbum_User(int id)
+        {
+            var album = await _dataContext.Albums.FindAsync(id);
+
+            TempData["albumCover"] = album.ImageFile;
+            TempData["albumName"] = album.AlbumName;
+            TempData["albumAuthor"] =album.AlbumAuthor;
+            TempData["albumRelease"] = album.AlbumRelease;
+            TempData["albumDesc"] = album.AlbumDescription;
+
+
             var songs_id = _dataContext.Songs.Where(e => e.AlbumId == id).ToList();
             List<Song> songs = new List<Song>();
             SongController songController = new SongController(_logger, _dataContext, _blobClient);

@@ -1,11 +1,13 @@
 ﻿@model List<PlayHarmoniez.Models.Album>
 <!-- Sidebar/menu -->
 @await Html.PartialAsync("~/Views/Shared/_Navbar_Admin.cshtml");
+<h1 style="margin-left:20%">Albums</h1>
 <div style="margin-left:20%">
     <a href="AddAlbum" class="btn btn-primary btn-lg" style="margin-bottom:40px;margin-top:40px">Would you like to add an album?</a>
 <table class="table table-hover">
     <thead>
         <tr>
+            <th scope="col">Songs</th>
             <th scope="col">Title</th>
             <th scope="col">Author</th>
             <th scope="col">Published Date</th>
@@ -18,12 +20,18 @@
         @foreach (var album in Model)
         {
             <tr class="table-active">
-                    <td><a href="GetSongsOfAlbum/@album.Id">@album.AlbumName</a></td>
+                    <td>
+                        <a class="circle-button-link" href="GetSongsOfAlbum/@album.Id">
+                            <img src="https://cdn1.iconfinder.com/data/icons/devices-3-4/48/128-128.png"
+                                 alt="Songs in Album"
+                                 title="Songs in Album">
+                        </a>
+                    </td>
                 <td>@album.AlbumName</td>
                 <td>@album.AlbumAuthor</td>
                 <td>@album.AlbumRelease.ToString("dd-mm-yyyy")</td>
                 <td>@album.AlbumDescription</td>
-                <td><img src=@album.ImageFile style="width:60px;height:60px;"></td>
+                <td><img class="image-container" src=@album.ImageFile style="width:60px;height:60px;"></td>
                 <td><a href="UpdateAlbum/@album.Id">Modify</a></td>
             </tr>
         }

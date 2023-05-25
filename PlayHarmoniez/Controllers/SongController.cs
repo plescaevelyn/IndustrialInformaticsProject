@@ -8,6 +8,8 @@ namespace PlayHarmoniez.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using System.Diagnostics;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+   
 
     namespace PlayHarmoniez.Controllers
     {
@@ -34,6 +36,8 @@ namespace PlayHarmoniez.Controllers
                 return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             }
 
+            // Song Lists for both User and admin
+
             [HttpGet]
             public async Task<IActionResult> SongsList() { 
             
@@ -47,10 +51,15 @@ namespace PlayHarmoniez.Controllers
                 List<Song> songs = await _dataContext.Songs.ToListAsync();
                 return View(songs);
             }
+            // Add SONG
 
             [HttpGet]
-            public IActionResult AddSong()
+            public async Task<IActionResult> AddSong()
             {
+                List<Album> albums=await _dataContext.Albums.ToListAsync();
+                var itemList = new SelectList(albums, "Id","AlbumName");
+                ViewBag.ItemList = itemList;
+
                 return View();
             }
 
@@ -81,6 +90,8 @@ namespace PlayHarmoniez.Controllers
 
                 return RedirectToAction("SongsList");
             }
+
+            // methods for imagefile and soundfile url creation
 
             [HttpPost]
             public async Task<string> UploadSong(string name, string containerName, IFormFile soundFile)
@@ -121,6 +132,8 @@ namespace PlayHarmoniez.Controllers
 
                 return blobUrl;
             }
+
+            //update song methods
 
             [HttpGet]
             public async Task<IActionResult> UpdateSong(int Id)
@@ -171,6 +184,8 @@ namespace PlayHarmoniez.Controllers
                 return RedirectToAction("SongsList");
             }
 
+            // delete song
+
             [HttpGet]
             public IActionResult DeleteSong()
             {
@@ -209,6 +224,9 @@ namespace PlayHarmoniez.Controllers
 
                 return RedirectToAction("SongsList");
             }
+
+            // this method is used to pass control and info to playlist in order to perform
+            //the needed logic
             public async Task<IActionResult> PassSongId(int songId) {
 
                 Song song = await _dataContext.Songs.FirstOrDefaultAsync(e => e.Id == songId);
@@ -218,6 +236,8 @@ namespace PlayHarmoniez.Controllers
                 else
                 return RedirectToAction("Playlist_choose","Playlist",new {Id=songId});
             }
+            // removes a song from playlist
+
             public async Task<IActionResult> RemoveFromPlaylist(int songId,int playlistId)
             {
                 var songs_id = _dataContext.PlaylistSongs.Where(e => e.SongId == songId).ToList();
@@ -232,7 +252,7 @@ namespace PlayHarmoniez.Controllers
                 int plid = playlistId;
                 return RedirectToAction("GetPlaylistSongs", "Playlist", new {Id=playlistId});
             }
-
+            // gets songs by their id
                 public Song? GetSongById(int id)
             {
                 var songModel = _dataContext.Songs.Find(id);

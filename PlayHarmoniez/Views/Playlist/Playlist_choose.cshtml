@@ -2,6 +2,7 @@
 
 <!-- Sidebar/menu -->
 @await Html.PartialAsync("~/Views/Shared/_Navbar_User.cshtml");
+<h1 style="margin-left:20%">Choose PLaylist</h1>
 @foreach (var playlist in Model)
 {
     <div class="card text-white bg-dark mb-3" style="max-width: 75rem; max-height: 20rem;margin-left:20%">

@@ -2,6 +2,7 @@
 
 <!-- Sidebar/menu -->
 @await Html.PartialAsync("~/Views/Shared/_Navbar_User.cshtml");
+<h1 style="margin-left:20%">Playlists</h1>
 <a href="AddPlaylist" class="btn btn-primary btn-lg" style="margin-left:20%;margin-bottom:40px;margin-top:40px">Add playlist</a>
 
 @foreach(var playlist in Model)
