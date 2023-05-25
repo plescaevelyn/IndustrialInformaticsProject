@@ -2,30 +2,49 @@
 
 <!-- Sidebar/menu -->
 @await Html.PartialAsync("~/Views/Shared/_Navbar_User.cshtml");
-<h1 style="margin-left:20%">Songs</h1>
+
+<div class="card text-white bg-dark mb-3" 
+     style="margin-left:20%;">
+    <div class="image-container" style="max-width:200px;max-height:200px">
+        <img src=" @((string)ViewContext.TempData["albumCover"])">
+    </div>
+    <div style="font-size: 24px">
+        @((string)ViewContext.TempData["albumName"])
+    </div>
+    <div>
+        @((string)ViewContext.TempData["albumAuthor"])
+    </div>
+    <div>
+        @((DateTime)ViewContext.TempData["albumRelease"])
+    </div>
+    <div>
+        @((string)ViewContext.TempData["albumDesc"])
+    </div>
+</div>
+
 @foreach (var song in Model)
 {
 
     <div class="card text-white bg-dark mb-3" style="max-width: 75rem; max-height: 20rem;margin-left:20%">
         <div class="song-container">
-           <img class="image-container" src=@song.ImageFile.ToString() style="width:150px;height:150px;">
+            <img class="image-container" src=@song.ImageFile.ToString() style="width:150px;height:150px;">
             <div class="song-info">
                 <h3 class="song-title">@song.Title</h3>
                 <p class="song-author">@song.Author</p>
                 <p class="song-author">@song.PublishData.ToString("yyyy-mm-dd")</p>
                 <p class="song-author">@song.Description</p>
-           </div>
+            </div>
             <audio class="song-audio" controls>
                 <source src=@song.SoundFile.ToString() type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
             <a class="circle-button-link" href="@Url.Action("PassSongId","Song",new{songId=@song.Id})">
-                <img src="https://cdn4.iconfinder.com/data/icons/media-buttons/512/add-1024.png" 
+                <img src="https://cdn4.iconfinder.com/data/icons/media-buttons/512/add-1024.png"
                      alt="Add to Playlist"
                      title="Add to Playlist">
             </a>
             <a class="circle-button-link" href="~/LikedSong/AddLikedSong/@song.Id">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Eo_circle_purple_heart.svg/1024px-Eo_circle_purple_heart.svg.png" 
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Eo_circle_purple_heart.svg/1024px-Eo_circle_purple_heart.svg.png"
                      alt="Add to Favorites"
                      title="Add to Favorites">
             </a>

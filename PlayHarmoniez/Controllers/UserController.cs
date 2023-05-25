@@ -102,6 +102,7 @@ namespace PlayHarmoniez.Controllers
                     userModel.AdminCheck = false;
                     await _dataContext.SaveChangesAsync();
                 }
+                TempData["User_mody"] = "Updated!";
                 return RedirectToAction("GetUserById", "User");
             }
             [HttpGet]

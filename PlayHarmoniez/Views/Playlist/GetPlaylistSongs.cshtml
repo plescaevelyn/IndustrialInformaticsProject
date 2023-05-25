@@ -3,7 +3,7 @@
 <!-- Sidebar/menu -->
 @await Html.PartialAsync("~/Views/Shared/_Navbar_User.cshtml");
 
-<div style="margin-left:20%">
+<div class="card text-white bg-dark mb-3" style="margin-left:20%">
     <div style="font-size: 24px">
         @((string)ViewContext.TempData["PlaylistName"])
     </div>
@@ -16,7 +16,7 @@
 
     <div class="card text-white bg-dark mb-3" style="max-width: 75rem; max-height: 20rem;margin-left:20%">
         <div class="song-container">
-            <img vlass="song-cover" src=@song.ImageFile.ToString() style="width:150px;height:150px;">
+            <img class="image-container" src=@song.ImageFile.ToString() style="width:150px;height:150px;">
             <div class="song-info">
                 <h3 class="song-title">@song.Title</h3>
                 <p class="song-author">@song.Author</p>

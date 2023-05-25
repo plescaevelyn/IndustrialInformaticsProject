@@ -2,12 +2,13 @@
 
 <!-- Sidebar/menu -->
 @await Html.PartialAsync("~/Views/Shared/_Navbar_Admin.cshtml");
+<h1 style="margin-left:20%">Songs</h1>
 <a href="AddSong" class="btn btn-primary btn-lg" style="margin-left:20%;margin-bottom:40px;margin-top:40px">Would you like to add a song?</a>
 @foreach(var song in Model)
 {
     <div class="card text-white bg-dark mb-3" style="max-width: 75rem; max-height: 20rem;margin-left:20%">
         <div class="song-container">
-            <img vlass="song-cover" src=@song.ImageFile.ToString() style="width:150px;height:150px;">
+            <img class="image-container" src=@song.ImageFile.ToString() style="width:150px;height:150px;">
             <div class="song-info">
                 <h3 class="song-title">Title:@song.Title</h3>
                 <p class="song-author">Author:@song.Author</p>
