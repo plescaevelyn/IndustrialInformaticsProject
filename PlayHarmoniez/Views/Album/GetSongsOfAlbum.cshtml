@@ -30,7 +30,7 @@
             <div class="song-info">
                 <h3 class="song-title">Title:@song.Title</h3>
                 <p class="song-author">Author:@song.Author</p>
-                <p class="song-author">Published Data:@song.PublishData.ToString("yyyy-mm-dd")</p>
+                <p class="song-author">Published Data:@song.PublishData.ToShortDateString()</p>
                 <p class="song-author">Description:@song.Description</p>
             </div>
             <audio class="song-audio" controls>

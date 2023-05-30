@@ -26,7 +26,7 @@
 	</div>
 	<div class="mb-3">
 		<label for="" class="form-label">Image file</label>
-		<input type="file" name="imageFile" class="form-control" asp-for="@Model.ImageFile" />
+			<input type="file" name="imageFile" class="form-control" value="@Model.ImageFile" asp-for="@Model.ImageFile" />
 	</div>
 	<button type="submit" class="btn btn-primary">Submit</button>
 	<button type="submit" class="btn btn-danger" asp-asp-controller="Album" asp-action="DeleteAlbum">Delete</button>
